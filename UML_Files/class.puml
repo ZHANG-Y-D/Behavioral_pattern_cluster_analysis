@@ -1,0 +1,9 @@
+@startuml
+
+class DayDeck
+class DayContainer
+
+DayDeck "1" o--- "many" DayContainer
+
+
+@enduml
