@@ -1,4 +1,5 @@
 @startuml
 
 __init__ -> SQLTool : connect sql
+
 @enduml
