@@ -22,3 +22,6 @@ for day_container in dayDeck.get_list_of_day():
                                     "'order by t_from, t_to, id_room;")
     for tuple_curr in result:
         day_container.add_pir_value(tuple_curr)
+
+    day_container.fill_black()
+

@@ -28,9 +28,17 @@ class DayContainer:
             which is 1 2 3 4 5 6 7 8 9 a, a is 10.
             When not at home, we use f to indicate
             When there are two states at the same time,
-            we directly add it.
-            For example: pir 1 on and then 10 on, write 1a
+            we directly add it,But the same signal is only recorded once at the same time.
+                For example: pir 1 on and then 10 on, write 1a
             If a tuple spans more than two days, it is directly regarded as noise
+            Finally, a loop is used to fill in the blanks,
+            and the last element of the previous signal is added.
+            if the first element is black, Fill with the first signal of the following element
+                For example: previous is '34', we just use '4',
+                Because signal 4 is presented last.
+                And
+                [None,None,'34','4',.......]
+                -> ['3','3','34','4',.......]
         """
 
         if tuple_curr[2].date() - tuple_curr[1].date() > timedelta(days=1):
@@ -49,12 +57,14 @@ class DayContainer:
         while True:
             index = self.find_index(t_from, t_to)
             if index == -1:
-                return
+                break
             if self.pir_sensor[index] is None:
                 self.pir_sensor[index] = room
             else:
-                self.pir_sensor[index] = "{0}{1}".format(self.pir_sensor[index], room)
-
+                # the same signal is only recorded once at the same time.
+                if room not in self.pir_sensor[index]:
+                    self.pir_sensor[index] = "{0}{1}".format(self.pir_sensor[index], room)
+            # Record every 30 seconds
             t_from = t_from + timedelta(seconds=30)
 
     def get_pir_list(self):
@@ -101,3 +111,22 @@ class DayContainer:
                 time_value = time_value.replace(second=30)
 
         return time_value
+
+    def fill_black(self):
+        index = 0
+        fill_value = None
+        if self.get_pir_list()[0] is None:
+            for signal in self.get_pir_list():
+                if signal is not None:
+                    fill_value = signal[0]
+                    break
+                index += 1
+            for i in range(index):
+                self.pir_sensor[i] = fill_value
+
+        index = 0
+        for signal in self.get_pir_list():
+            if signal is None:
+                self.pir_sensor[index] = \
+                    self.get_pir_list()[index - 1][-1]
+            index += 1
