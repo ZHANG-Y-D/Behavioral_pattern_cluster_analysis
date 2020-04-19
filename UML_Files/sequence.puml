@@ -1,5 +1,5 @@
 @startuml
 
-__init__ -> SQLTool : connect sql
+__init__ -> process_controller : do all process jobs
 
 @enduml
