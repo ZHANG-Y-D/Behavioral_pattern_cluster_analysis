@@ -16,7 +16,7 @@ class DayContainer:
         self.date_curr = date_curr
         self.pir_sensor = [None] * 2880
         self.lumen_sensor = [[None] * 288 for i in range(10)]
-        self.temp_sensor = []
+        self.temp_sensor = [[None] * 72 for i in range(10)]
         self.power_sensor = []
 
     def get_date(self):
@@ -73,15 +73,15 @@ class DayContainer:
 
     def add_lumen_value(self, tuple_curr):
         lumen_level = self.determine_lumen_level(tuple_curr[1], tuple_curr[2])
-        time_curr = self.normalisation_time(None, tuple_curr[2], 30)
-        index = self.find_index(time_curr, 5 * 60)
+        time_curr = self.normalisation_time(None, tuple_curr[2], 300)
+        index = self.find_index(time_curr, 300)
         self.lumen_sensor[tuple_curr[0] - 1][index] = lumen_level
 
-    def get_pir_list(self):
-        return self.pir_sensor
-
-    def add_temp_value(self, num_sensor, position, value):
-        pass
+    def add_temp_value(self, tuple_curr):
+        temp_level = self.determine_temp_level(tuple_curr[1])
+        time_curr = self.normalisation_time(None, tuple_curr[2], 1200)
+        index = self.find_index(time_curr, 1200)
+        self.temp_sensor[tuple_curr[0] - 1][index] = temp_level
 
     def add_power_value(self, num_sensor, position, value):
         pass
@@ -154,6 +154,8 @@ class DayContainer:
                     break
                 index += 1
             if fill_value is None:
+                print("Warning: No PIR signal received at "
+                      + self.get_date().strftime("%Y-%m-%d"))
                 return
             for i in range(index):
                 self.pir_sensor[i] = fill_value
@@ -194,3 +196,71 @@ class DayContainer:
             return 4
         else:
             return 5
+
+    def fill_black_for_list(self, list_type):
+        """
+        It is used to fill in the curr_list blanks,
+        the previous signal will use to be Filler.
+        if the first signal is black, Fill with
+        the following "not black signal"
+        [None,None,'3','4','3',None,None,'5','4,.......]
+        -> ['3','3','3','4','3','3','3','5','4',.......]
+        if the whole curr_list is None(initial state),
+        this function will do nothing.
+
+        :param list_type: which curr_list you want to fill
+                        lumen temp or power
+
+        """
+        if list_type == 'lumen':
+            fill_list = self.lumen_sensor
+        elif list_type == 'temp':
+            fill_list = self.temp_sensor
+        elif list_type == 'power':
+            fill_list = self.power_sensor
+        else:
+            print("Warning: list_type have to be lumen temp or power")
+            return
+
+        num_signal = 0
+        for curr_list in fill_list:
+            num_signal += 1
+            index = 0
+            fill_value = None
+            if curr_list[0] is None:
+                for signal in curr_list:
+                    if signal is not None:
+                        fill_value = signal
+                        break
+                    index += 1
+                if fill_value is None:
+                    print("Warning: Num." + str(num_signal) + " No " + list_type
+                          + " signal received at " + self.get_date().strftime("%Y-%m-%d"))
+                    continue
+                for i in range(index):
+                    curr_list[i] = fill_value
+
+            index = 0
+            for signal in curr_list:
+                if signal is None:
+                    curr_list[index] = curr_list[index - 1]
+                index += 1
+
+    def get_temp_list(self):
+        return self.temp_sensor
+
+    def get_pir_list(self):
+        return self.pir_sensor
+
+    @staticmethod
+    def determine_temp_level(value):
+        """
+            We temporarily set the temperature to two degrees as a step
+            For example：
+                18.5 -> 18
+                19.5 -> 18
+                They are regarded as no difference,
+                because they are in the same step
+        """
+        value = int(float(value))
+        return value - (value % 2)

@@ -43,6 +43,7 @@ class TestDayContainer(TestCase):
 
     def test_fill_black(self):
         self.day.add_pir_value((None, datetime(2020, 4, 2, 0, 4, 10), datetime(2020, 4, 5, 0, 4, 10)))
+        self.day.fill_black_for_pir_list()
         self.assertEqual(None, self.day.get_pir_list()[2879])
         print(self.day.get_pir_list())
         self.day.add_pir_value((3, datetime(2020, 4, 2, 0, 4, 10), datetime(2020, 4, 2, 0, 4, 10)))
@@ -78,3 +79,18 @@ class TestDayContainer(TestCase):
         self.assertEqual(None, self.day.get_lumen_list()[8][287])
         self.day.add_lumen_value((1, '200', datetime(2020, 4, 2, 23, 59, 59)))
         self.assertEqual(4, self.day.get_lumen_list()[0][287])
+
+    def test_determine_temp_level(self):
+        return_value = self.day.determine_temp_level(19.6)
+        self.assertEqual(18, return_value)
+        return_value = self.day.determine_temp_level(-19.6)
+        self.assertEqual(-20, return_value)
+        return_value = self.day.determine_temp_level(0.2)
+        self.assertEqual(0, return_value)
+        return_value = self.day.determine_temp_level(-1.2)
+        self.assertEqual(-2, return_value)
+        return_value = self.day.determine_temp_level(1.2)
+        self.assertEqual(0, return_value)
+        return_value = self.day.determine_temp_level(17.2)
+        self.assertEqual(16, return_value)
+
