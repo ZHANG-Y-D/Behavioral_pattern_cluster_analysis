@@ -13,14 +13,17 @@ class DayContainer:
     def __init__(self, date_curr, num):
         self.number_of_day = num
         self.date_curr = date_curr
-        self.pir_sensor = [None] * 2880
-        self.lumen_sensor = [[None] * 288 for i in range(10)]
-        self.temp_sensor = [[None] * 72 for i in range(10)]
-        self.appliances_sampling_interval \
-            = [30, 120, 300, 1200, 120, 120, 120, 120, 120]
-        self.init_power_list()
 
-    def init_power_list(self):
+    def init_pir_list(self, sampling_interval):
+        self.pir_sensor = [None] * sampling_interval
+
+    def init_lumen_list(self, sampling_interval):
+        self.lumen_sensor = [[None] * sampling_interval for i in range(10)]
+
+    def init_temp_list(self, sampling_interval):
+        self.temp_sensor = [[None] * sampling_interval for i in range(10)]
+
+    def init_power_list(self, appliances_sampling_interval):
         """
             There are 9 domestic appliances
             1.Microonde: No.24, sampling interval is 30s
@@ -37,29 +40,23 @@ class DayContainer:
         """
         self.power_sensor = [None] * 9
         self.power_sensor[0] = \
-            [None] * int((60 * 60 * 24) / self.appliances_sampling_interval[0])  # Microonde
+            [None] * int((60 * 60 * 24) / appliances_sampling_interval[0])  # Microonde
         self.power_sensor[1] = \
-            [None] * int((60 * 60 * 24) / self.appliances_sampling_interval[1])  # Televisione
+            [None] * int((60 * 60 * 24) / appliances_sampling_interval[1])  # Televisione
         self.power_sensor[2] = \
-            [None] * int((60 * 60 * 24) / self.appliances_sampling_interval[2])  # HC2 Power
+            [None] * int((60 * 60 * 24) / appliances_sampling_interval[2])  # HC2 Power
         self.power_sensor[3] = \
-            [None] * int((60 * 60 * 24) / self.appliances_sampling_interval[3])  # Frigorifero
+            [None] * int((60 * 60 * 24) / appliances_sampling_interval[3])  # Frigorifero
         self.power_sensor[4] = \
-            [None] * int((60 * 60 * 24) / self.appliances_sampling_interval[4])  # Forno
+            [None] * int((60 * 60 * 24) / appliances_sampling_interval[4])  # Forno
         self.power_sensor[5] = \
-            [None] * int((60 * 60 * 24) / self.appliances_sampling_interval[5])  # Lavatrici
+            [None] * int((60 * 60 * 24) / appliances_sampling_interval[5])  # Lavatrici
         self.power_sensor[6] = \
-            [None] * int((60 * 60 * 24) / self.appliances_sampling_interval[6])  # Serra A
+            [None] * int((60 * 60 * 24) / appliances_sampling_interval[6])  # Serra A
         self.power_sensor[7] = \
-            [None] * int((60 * 60 * 24) / self.appliances_sampling_interval[7])  # Lavastoviglie
+            [None] * int((60 * 60 * 24) / appliances_sampling_interval[7])  # Lavastoviglie
         self.power_sensor[8] = \
-            [None] * int((60 * 60 * 24) / self.appliances_sampling_interval[8])  # PC
-
-    def get_date(self):
-        return self.date_curr
-
-    def get_lumen_list(self):
-        return self.lumen_sensor
+            [None] * int((60 * 60 * 24) / appliances_sampling_interval[8])  # PC
 
     def add_pir_value(self, tuple_curr):
         """
@@ -119,13 +116,13 @@ class DayContainer:
         index = self.find_index(time_curr, 1200)
         self.temp_sensor[tuple_curr[0] - 1][index] = temp_level
 
-    def add_power_value(self, tuple_curr):
+    def add_power_value(self, tuple_curr, appliances_sampling_interval):
         power_level = self.determine_power_level(tuple_curr[0], tuple_curr[1], tuple_curr[2])
         power_position = self.normalisation_power_position_in_list(tuple_curr[0])
         time_curr = self.normalisation_time(None,
                                             tuple_curr[3],
-                                            self.appliances_sampling_interval[power_position])
-        index = self.find_index(time_curr, self.appliances_sampling_interval[power_position])
+                                            appliances_sampling_interval[power_position])
+        index = self.find_index(time_curr, appliances_sampling_interval[power_position])
         self.power_sensor[power_position][index] = power_level
 
     @staticmethod
@@ -288,14 +285,37 @@ class DayContainer:
                     curr_list[index] = curr_list[index - 1]
                 index += 1
 
-    def get_temp_list(self):
-        return self.temp_sensor
+    def get_date(self):
+        return self.date_curr
 
     def get_pir_list(self):
-        return self.pir_sensor
+        try:
+            return self.pir_sensor
+        except AttributeError:
+            return None
+
+    def get_lumen_list(self):
+        try:
+            return self.lumen_sensor
+        except AttributeError:
+            return None
+
+    def get_temp_list(self):
+        try:
+            return self.temp_sensor
+        except AttributeError:
+            return None
 
     def get_power_list(self):
-        return self.power_sensor
+        try:
+            return self.power_sensor
+        except AttributeError:
+            return None
+
+    def get_all_list(self):
+        all_list = \
+            [self.get_pir_list(), self.get_lumen_list(), self.get_temp_list(), self.get_power_list()]
+        return all_list
 
     @staticmethod
     def determine_temp_level(value):
