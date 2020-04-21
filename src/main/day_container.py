@@ -1,6 +1,4 @@
-from datetime import time
-from datetime import timedelta
-from datetime import date
+from datetime import time, timedelta, date
 
 
 class DayContainer:
@@ -325,7 +323,7 @@ class DayContainer:
         power_level_for_refrigerator = [0, 2, 50]
         threshold = int(threshold)
         value = int(value)
-        
+
         if num_of_appliance == 150 and threshold == 0:  # For PC
             threshold = 5
 

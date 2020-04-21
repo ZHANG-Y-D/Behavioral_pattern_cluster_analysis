@@ -12,3 +12,4 @@ class DayDeck:
 
     def get_list_of_day(self):
         return self.dayDeck
+

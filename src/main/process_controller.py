@@ -77,3 +77,7 @@ def build_power_list(sql_tool, list_of_day_deck):
         day_container.fill_black_for_list("power")
         # for ele in day_container.get_power_list():
         #     print(ele)
+
+def proximity_matrix_generator(list_of_day_deck):
+    # TODO
+    pass

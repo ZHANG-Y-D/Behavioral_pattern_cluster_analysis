@@ -6,7 +6,9 @@ dayDeck = DayDeck()
 sqlTool = SQLTool()
 
 build_day_container(sqlTool, dayDeck)
-# build_pir_list(sqlTool, dayDeck.get_list_of_day())
-# build_lumen_list(sqlTool, dayDeck.get_list_of_day())
-# build_temp_list(sqlTool, dayDeck.get_list_of_day())
+build_pir_list(sqlTool, dayDeck.get_list_of_day())
+build_lumen_list(sqlTool, dayDeck.get_list_of_day())
+build_temp_list(sqlTool, dayDeck.get_list_of_day())
 build_power_list(sqlTool, dayDeck.get_list_of_day())
+
+proximity_matrix_generator(dayDeck.get_list_of_day())

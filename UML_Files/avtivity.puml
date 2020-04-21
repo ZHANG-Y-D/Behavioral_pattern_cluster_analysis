@@ -1,0 +1,8 @@
+@startuml
+start
+:connec sql;
+:build pir/lumen/temp/power list;
+:generate proximity matrix;
+:hierarchical clustering;
+end
+@enduml
