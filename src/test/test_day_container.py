@@ -94,3 +94,32 @@ class TestDayContainer(TestCase):
         return_value = self.day.determine_temp_level(17.2)
         self.assertEqual(16, return_value)
 
+    def test_determine_power_level(self):
+        return_value = self.day.determine_power_level(24, 0, 5)
+        self.assertEqual(False, return_value)
+        return_value = self.day.determine_power_level(150, 0, 0)
+        self.assertEqual(False, return_value)
+        return_value = self.day.determine_power_level(150, 2, 1)
+        self.assertEqual(True, return_value)
+        return_value = self.day.determine_power_level(45, 3, 0)
+        self.assertEqual(3, return_value)
+        return_value = self.day.determine_power_level(32, 0, 0)
+        self.assertEqual(0, return_value)
+        return_value = self.day.determine_power_level(32, 2, 0)
+        self.assertEqual(0, return_value)
+        return_value = self.day.determine_power_level(32, 5, 0)
+        self.assertEqual(1, return_value)
+        return_value = self.day.determine_power_level(32, 50, 0)
+        self.assertEqual(1, return_value)
+        return_value = self.day.determine_power_level(32, 51, 0)
+        self.assertEqual(2, return_value)
+
+    def test_add_power_value(self):
+        self.day.add_power_value((24, 1, 20, datetime(2020, 4, 2, 0, 10, 0)))
+        self.assertEqual(False, self.day.get_power_list()[0][20])
+        self.day.add_power_value((32, 50, 0, datetime(2020, 4, 2, 0, 10, 0)))
+        self.assertEqual(1, self.day.get_power_list()[3][0])
+        self.day.add_power_value((45, 5, 0, datetime(2020, 4, 2, 0, 10, 0)))
+        self.assertEqual(5, self.day.get_power_list()[6][5])
+        # for ele in self.day.get_power_list():
+        #     print(ele)

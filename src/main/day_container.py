@@ -1,4 +1,4 @@
-from datetime import datetime, time
+from datetime import time
 from datetime import timedelta
 from datetime import date
 
@@ -10,6 +10,7 @@ class DayContainer:
     lumen_sensor: list  # [10][288]
     temp_sensor: list  # [72][8]
     power_sensor: list  # [6]
+    appliances_sampling_interval: list
 
     def __init__(self, date_curr, num):
         self.number_of_day = num
@@ -17,7 +18,44 @@ class DayContainer:
         self.pir_sensor = [None] * 2880
         self.lumen_sensor = [[None] * 288 for i in range(10)]
         self.temp_sensor = [[None] * 72 for i in range(10)]
-        self.power_sensor = []
+        self.appliances_sampling_interval \
+            = [30, 120, 300, 1200, 120, 120, 120, 120, 120]
+        self.init_power_list()
+
+    def init_power_list(self):
+        """
+            There are 9 domestic appliances
+            1.Microonde: No.24, sampling interval is 30s
+            2.Televisione: No.26, sampling interval is 120s
+            3.HC2 Power: No.28, sampling interval is 300s
+            4.Frigorifero: No.32, sampling interval is 1200s
+                            Power_level: 0w, 2w, 50w
+            5.Forno: No.34, sampling interval is 120s
+            6.Lavatrici: No.36, sampling interval is 120s
+            7.Serra A: No.45, sampling interval is 120s,
+                        Directly record the original value
+            8.Lavastoviglie: No.148, sampling interval is 120s
+            9.PC: No.150, sampling interval is 120s, threshold: 5w
+        """
+        self.power_sensor = [None] * 9
+        self.power_sensor[0] = \
+            [None] * int((60 * 60 * 24) / self.appliances_sampling_interval[0])  # Microonde
+        self.power_sensor[1] = \
+            [None] * int((60 * 60 * 24) / self.appliances_sampling_interval[1])  # Televisione
+        self.power_sensor[2] = \
+            [None] * int((60 * 60 * 24) / self.appliances_sampling_interval[2])  # HC2 Power
+        self.power_sensor[3] = \
+            [None] * int((60 * 60 * 24) / self.appliances_sampling_interval[3])  # Frigorifero
+        self.power_sensor[4] = \
+            [None] * int((60 * 60 * 24) / self.appliances_sampling_interval[4])  # Forno
+        self.power_sensor[5] = \
+            [None] * int((60 * 60 * 24) / self.appliances_sampling_interval[5])  # Lavatrici
+        self.power_sensor[6] = \
+            [None] * int((60 * 60 * 24) / self.appliances_sampling_interval[6])  # Serra A
+        self.power_sensor[7] = \
+            [None] * int((60 * 60 * 24) / self.appliances_sampling_interval[7])  # Lavastoviglie
+        self.power_sensor[8] = \
+            [None] * int((60 * 60 * 24) / self.appliances_sampling_interval[8])  # PC
 
     def get_date(self):
         return self.date_curr
@@ -83,8 +121,14 @@ class DayContainer:
         index = self.find_index(time_curr, 1200)
         self.temp_sensor[tuple_curr[0] - 1][index] = temp_level
 
-    def add_power_value(self, num_sensor, position, value):
-        pass
+    def add_power_value(self, tuple_curr):
+        power_level = self.determine_power_level(tuple_curr[0], tuple_curr[1], tuple_curr[2])
+        power_position = self.normalisation_power_position_in_list(tuple_curr[0])
+        time_curr = self.normalisation_time(None,
+                                            tuple_curr[3],
+                                            self.appliances_sampling_interval[power_position])
+        index = self.find_index(time_curr, self.appliances_sampling_interval[power_position])
+        self.power_sensor[power_position][index] = power_level
 
     @staticmethod
     def find_index(t_from, sampling_interval):
@@ -252,6 +296,9 @@ class DayContainer:
     def get_pir_list(self):
         return self.pir_sensor
 
+    def get_power_list(self):
+        return self.power_sensor
+
     @staticmethod
     def determine_temp_level(value):
         """
@@ -264,3 +311,63 @@ class DayContainer:
         """
         value = int(float(value))
         return value - (value % 2)
+
+    @staticmethod
+    def determine_power_level(num_of_appliance, value, threshold):
+        """
+            For all appliances except refrigerators,Serra A,
+            We use True and False to indicate on/off,
+            Above the threshold is on and vice versa.
+            Attention: PC has no threshold in sql, but we use 5w
+            For refrigerators, we use power_level [0,2,50] -> 0,1,2
+            For Serra A, we use the original value of sql
+        """
+        power_level_for_refrigerator = [0, 2, 50]
+        threshold = int(threshold)
+        value = int(value)
+        
+        if num_of_appliance == 150 and threshold == 0:  # For PC
+            threshold = 5
+
+        if threshold != 0:
+            if value > threshold:
+                return True
+            else:
+                return False
+        elif num_of_appliance == 45:  # For Serra A
+            return value
+        elif num_of_appliance == 32:
+            if power_level_for_refrigerator[0] <= value <= power_level_for_refrigerator[1]:
+                return 0
+            elif power_level_for_refrigerator[1] < value <= power_level_for_refrigerator[2]:
+                return 1
+            else:
+                return 2
+        else:
+            print("Warning: Do not have this appliance, Maybe the database has changed")
+
+    @staticmethod
+    def normalisation_power_position_in_list(num_of_appliance):
+        """
+            Determine where appliances are stored in the list
+        """
+        if num_of_appliance == 24:
+            return 0
+        elif num_of_appliance == 26:
+            return 1
+        elif num_of_appliance == 28:
+            return 2
+        elif num_of_appliance == 32:
+            return 3
+        elif num_of_appliance == 34:
+            return 4
+        elif num_of_appliance == 36:
+            return 5
+        elif num_of_appliance == 45:
+            return 6
+        elif num_of_appliance == 148:
+            return 7
+        elif num_of_appliance == 150:
+            return 8
+        else:
+            print("Warning: Do not have this appliance, Maybe the database has changed")

@@ -18,7 +18,10 @@ def build_pir_list(sql_tool, list_of_day_deck):
         for tuple_curr in query_result:
             day_container.add_pir_value(tuple_curr)
 
+        # print("-------------------------------")
+        # print(day_container.get_pir_list())
         day_container.fill_black_for_pir_list()
+        # print(day_container.get_pir_list())
 
 
 def build_lumen_list(sql_tool, list_of_day_deck):
@@ -56,5 +59,21 @@ def build_temp_list(sql_tool, list_of_day_deck):
         # for ele in day_container.get_temp_list():
         #     print(ele)
 
+
 def build_power_list(sql_tool, list_of_day_deck):
-    pass
+    for day_container in list_of_day_deck:
+        date_curr = day_container.get_date().strftime('%Y-%m-%d')
+        query_result = sql_tool.query_from_sql("SELECT se.id_sensor, sd.value, se.threshold, sd.timestamp "
+                                               "FROM sensor as se join stream_data as sd "
+                                               "on se.id_sensor = sd.id_sensor WHERE se.id_sensor_type = 5 "
+                                               "and date(timestamp) = '"
+                                               + date_curr + "'order by se.id_sensor, timestamp;")
+        for tuple_curr in query_result:
+            day_container.add_power_value(tuple_curr)
+
+        # print("-------------------------------")
+        # for ele in day_container.get_power_list():
+        #     print(ele)
+        day_container.fill_black_for_list("power")
+        # for ele in day_container.get_power_list():
+        #     print(ele)
