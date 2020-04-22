@@ -1,4 +1,3 @@
-
 class ProximityMatrix:
     proximity_matrix: list
 
@@ -18,6 +17,13 @@ class ProximityMatrix:
 
     def get_proximity_matrix(self):
         return self.proximity_matrix
+
+    def find_min_coordinate(self):
+        min_value = min([min(ele) for ele in self.proximity_matrix])
+        for i, ele_x in enumerate(self.proximity_matrix):
+            for j, ele_y in enumerate(self.proximity_matrix[i]):
+                if ele_y == min_value:
+                    return [i, j]
 
     @staticmethod
     def is_2d_list(matrix_list):

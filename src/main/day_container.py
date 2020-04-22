@@ -2,7 +2,6 @@ from datetime import time, timedelta, date
 
 
 class DayContainer:
-    number_of_day: int
     date_curr: date
     pir_sensor: list  # length 2880.
     lumen_sensor: list  # [10][288]
@@ -10,8 +9,7 @@ class DayContainer:
     power_sensor: list  # [6]
     appliances_sampling_interval: list
 
-    def __init__(self, date_curr, num):
-        self.number_of_day = num
+    def __init__(self, date_curr):
         self.date_curr = date_curr
 
     def init_pir_list(self, sampling_interval):

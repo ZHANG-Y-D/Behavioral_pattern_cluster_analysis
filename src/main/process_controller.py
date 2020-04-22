@@ -3,13 +3,11 @@ from proximity_matrix import ProximityMatrix
 
 def build_day_container(sql_tool, day_deck):
     value = sql_tool.query_from_sql("select date(t_from) as date from person_position group by date order by date;")
-    value.pop(0)
-    value.pop()  # Because the data on the first and last day are not complete, exclude
-    position_of_date = 1
+    # value.pop(0)
+    # value.pop()  # Because the data on the first and last day are not complete, exclude
 
     for date in value:
-        day_deck.add_date(date[0], position_of_date)
-        position_of_date += 1
+        day_deck.add_date(date[0])
 
 
 def build_pir_list(sql_tool, list_of_day_deck):
@@ -93,8 +91,12 @@ def proximity_matrix_generator(list_of_day_deck, proximity_matrix):
         for index_y, later_day_container in enumerate(list_of_day_deck[index_x + 1:]):
             proximity_matrix.add_distance(index_x, index_y, day_container, later_day_container)
 
-    for ele in proximity_matrix.get_proximity_matrix():
-        print(ele)
+    print(proximity_matrix.get_proximity_matrix())
+    # for ele in proximity_matrix.get_proximity_matrix():
+    #     print(ele)
 
 
-
+def hierarchical_clustering(day_deck, proximity_matrix):
+    min_coordinate = proximity_matrix.find_min_coordinate()
+    print(min_coordinate)
+    day_deck.clustering(min_coordinate[0], min_coordinate[1])

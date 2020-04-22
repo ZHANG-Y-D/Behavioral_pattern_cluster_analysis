@@ -14,3 +14,4 @@ build_temp_list(sqlTool, dayDeck.get_list_of_day())
 build_power_list(sqlTool, dayDeck.get_list_of_day())
 
 proximity_matrix_generator(dayDeck.get_list_of_day(), proximity_matrix)
+# hierarchical_clustering(dayDeck, proximity_matrix)
