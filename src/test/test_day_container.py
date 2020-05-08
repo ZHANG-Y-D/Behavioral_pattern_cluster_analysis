@@ -5,8 +5,15 @@ from day_container import DayContainer
 
 class TestDayContainer(TestCase):
 
+    appliances_sampling_interval = [30, 120, 300, 1200, 120, 120, 120, 120, 120]
+
     def setUp(self):
         self.day = DayContainer(date(2020, 4, 2), 8)
+        self.assertEqual(8, self.day.date_num)
+        self.day.init_pir_list(2880)
+        self.day.init_lumen_list(288)
+        self.day.init_temp_list(72)
+        self.day.init_power_list(self.appliances_sampling_interval)
 
     def test_find_index(self):
         index = self.day.find_index(datetime(2020, 4, 2, 0, 0, 30), 30)
@@ -115,11 +122,11 @@ class TestDayContainer(TestCase):
         self.assertEqual(2, return_value)
 
     def test_add_power_value(self):
-        self.day.add_power_value((24, 1, 20, datetime(2020, 4, 2, 0, 10, 0)))
+        self.day.add_power_value((24, 1, 20, datetime(2020, 4, 2, 0, 10, 0)), self.appliances_sampling_interval)
         self.assertEqual(False, self.day.get_power_list()[0][20])
-        self.day.add_power_value((32, 50, 0, datetime(2020, 4, 2, 0, 10, 0)))
+        self.day.add_power_value((32, 50, 0, datetime(2020, 4, 2, 0, 10, 0)), self.appliances_sampling_interval)
         self.assertEqual(1, self.day.get_power_list()[3][0])
-        self.day.add_power_value((45, 5, 0, datetime(2020, 4, 2, 0, 10, 0)))
+        self.day.add_power_value((45, 5, 0, datetime(2020, 4, 2, 0, 10, 0)), self.appliances_sampling_interval)
         self.assertEqual(5, self.day.get_power_list()[6][5])
         # for ele in self.day.get_power_list():
         #     print(ele)

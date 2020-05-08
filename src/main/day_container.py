@@ -2,15 +2,20 @@ from datetime import time, timedelta, date
 
 
 class DayContainer:
+    date_num: int
     date_curr: date
     pir_sensor: list  # length 2880.
-    lumen_sensor: list  # [10][288]
-    temp_sensor: list  # [72][8]
-    power_sensor: list  # [6]
+    lumen_sensor: list  # [10][288] every 5 minute
+    temp_sensor: list  # [10][72] every 20 minute
+    power_sensor: list
     appliances_sampling_interval: list
 
-    def __init__(self, date_curr):
+    def __init__(self, date_curr, num):
         self.date_curr = date_curr
+        self.date_num = num
+
+    def modify_date_num(self, num):
+        self.date_num = num
 
     def init_pir_list(self, sampling_interval):
         self.pir_sensor = [None] * sampling_interval
@@ -271,7 +276,7 @@ class DayContainer:
                         break
                     index += 1
                 if fill_value is None:
-                    print("Warning: Num." + str(num_signal) + " No " + list_type
+                    print("Warning: Room " + str(num_signal) + " No " + list_type
                           + " signal received at " + self.get_date().strftime("%Y-%m-%d"))
                     continue
                 for i in range(index):

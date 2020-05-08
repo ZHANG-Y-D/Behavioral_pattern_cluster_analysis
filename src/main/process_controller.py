@@ -1,13 +1,12 @@
-from proximity_matrix import ProximityMatrix
-
-
 def build_day_container(sql_tool, day_deck):
     value = sql_tool.query_from_sql("select date(t_from) as date from person_position group by date order by date;")
     # value.pop(0)
     # value.pop()  # Because the data on the first and last day are not complete, exclude
 
-    for date in value:
-        day_deck.add_date(date[0])
+    for i, date in enumerate(value):
+        day_deck.add_date(date[0], i)
+
+    day_deck.init_num_of_clustering(len(day_deck.get_list_of_day()))
 
 
 def build_pir_list(sql_tool, list_of_day_deck):
@@ -19,6 +18,7 @@ def build_pir_list(sql_tool, list_of_day_deck):
                                                + date_curr + "'order by t_from, t_to, id_room;")
         for tuple_curr in query_result:
             day_container.add_pir_value(tuple_curr)
+            # print(tuple_curr)
 
         # print("-------------------------------")
         # print(day_container.get_pir_list())
