@@ -1,3 +1,6 @@
+from proximity_matrix import ProximityMatrix
+
+
 def build_day_container(sql_tool, day_deck):
     value = sql_tool.query_from_sql("select date(t_from) as date from person_position group by date order by date;")
     # value.pop(0)
@@ -96,7 +99,27 @@ def proximity_matrix_generator(list_of_day_deck, proximity_matrix):
     #     print(ele)
 
 
-def hierarchical_clustering(day_deck, proximity_matrix):
-    min_coordinate = proximity_matrix.find_min_coordinate()
-    print(min_coordinate)
-    day_deck.clustering(min_coordinate[0], min_coordinate[1])
+def hierarchical_clustering(day_deck, linkage_list):
+    proximity_matrix = ProximityMatrix()
+
+    # Generate thw proximity matrix
+    proximity_matrix_generator(day_deck.get_list_of_day(), proximity_matrix)
+
+    # Calculate min value and get min coordinate, form: [x_axis, y_axis, min_value]
+    min_coordinate_and_minvalue = ProximityMatrix.find_min_coordinate(proximity_matrix.proximity_matrix)
+
+    # Pop two days from day deck
+    first_day = day_deck.dayDeck.pop(min_coordinate_and_minvalue[0])
+    second_day = day_deck.dayDeck.pop(min_coordinate_and_minvalue[0] + min_coordinate_and_minvalue[1])
+
+    # cluster two days
+    day_deck.clustering(first_day, second_day)
+
+    # Add it to linkage list
+    linkage_list.add_linkage_element(first_day.date_num,
+                                     second_day.date_num,
+                                     min_coordinate_and_minvalue[2],
+                                     first_day.num_of_clustered + second_day.num_of_clustered)
+
+    print(linkage_list.linkage_list)
+

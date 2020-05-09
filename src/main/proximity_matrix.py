@@ -18,12 +18,13 @@ class ProximityMatrix:
     def get_proximity_matrix(self):
         return self.proximity_matrix
 
-    def find_min_coordinate(self):
-        min_value = min([min(ele) for ele in self.proximity_matrix])
-        for i, ele_x in enumerate(self.proximity_matrix):
-            for j, ele_y in enumerate(self.proximity_matrix[i]):
+    @staticmethod
+    def find_min_coordinate(proximity_matrix):
+        min_value = min([min(ele) for ele in proximity_matrix])
+        for i, ele_x in enumerate(proximity_matrix):
+            for j, ele_y in enumerate(proximity_matrix[i]):
                 if ele_y == min_value:
-                    return [i, j]
+                    return [i, j, min_value]
 
     @staticmethod
     def is_2d_list(matrix_list):
@@ -36,7 +37,8 @@ class ProximityMatrix:
     def calculate_1d_distance(ele_first, ele_second):
         distance = 0
         for i in range(len(ele_first)):
-            if ele_first[i] != ele_second[i]:
+            if ele_first[i] != ele_second[i] and \
+                    ele_first[i] != 'X' and ele_second[i] != 'X':
                 distance += 1
         return distance
 

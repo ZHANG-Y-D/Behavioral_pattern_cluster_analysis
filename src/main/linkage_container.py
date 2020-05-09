@@ -16,5 +16,3 @@ class LinkageContainer:
                                   float(distance),
                                   float(num_of_clustering)])
 
-    def get_linkage_list(self):
-        return self.linkage_list

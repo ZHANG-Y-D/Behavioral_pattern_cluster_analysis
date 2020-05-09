@@ -130,3 +130,4 @@ class TestDayContainer(TestCase):
         self.assertEqual(5, self.day.get_power_list()[6][5])
         # for ele in self.day.get_power_list():
         #     print(ele)
+

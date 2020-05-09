@@ -9,13 +9,12 @@ class DayContainer:
     temp_sensor: list  # [10][72] every 20 minute
     power_sensor: list
     appliances_sampling_interval: list
+    num_of_clustered: int
 
     def __init__(self, date_curr, num):
         self.date_curr = date_curr
         self.date_num = num
-
-    def modify_date_num(self, num):
-        self.date_num = num
+        self.num_of_clustered = 1
 
     def init_pir_list(self, sampling_interval):
         self.pir_sensor = [None] * sampling_interval
