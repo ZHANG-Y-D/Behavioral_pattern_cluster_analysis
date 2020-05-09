@@ -5,14 +5,17 @@ from proximity_matrix import ProximityMatrix
 
 
 class DayDeck:
+    data_name_labels: list
     dayDeck: list
     date_num_of_clustering: int
 
     def __init__(self):
         self.dayDeck = []
+        self.data_name_labels = []
 
     def add_date(self, date_to_day_container, num):
         self.dayDeck.append(DayContainer(date_to_day_container, num))
+        self.data_name_labels.append(str(date_to_day_container))
 
     def init_num_of_clustering(self, num):
         self.date_num_of_clustering = num

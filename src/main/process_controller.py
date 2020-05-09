@@ -1,4 +1,5 @@
 from proximity_matrix import ProximityMatrix
+import data_visualization as dv
 
 
 def build_day_container(sql_tool, day_deck):
@@ -94,7 +95,7 @@ def proximity_matrix_generator(list_of_day_deck, proximity_matrix):
         for index_y, later_day_container in enumerate(list_of_day_deck[index_x + 1:]):
             proximity_matrix.add_distance(index_x, index_y, day_container, later_day_container)
 
-    print(proximity_matrix.get_proximity_matrix())
+    # print(proximity_matrix.get_proximity_matrix())
     # for ele in proximity_matrix.get_proximity_matrix():
     #     print(ele)
 
@@ -102,24 +103,38 @@ def proximity_matrix_generator(list_of_day_deck, proximity_matrix):
 def hierarchical_clustering(day_deck, linkage_list):
     proximity_matrix = ProximityMatrix()
 
-    # Generate thw proximity matrix
-    proximity_matrix_generator(day_deck.get_list_of_day(), proximity_matrix)
+    while len(day_deck.dayDeck) > 1:
+        # Generate thw proximity matrix
+        proximity_matrix_generator(day_deck.get_list_of_day(), proximity_matrix)
 
-    # Calculate min value and get min coordinate, form: [x_axis, y_axis, min_value]
-    min_coordinate_and_minvalue = ProximityMatrix.find_min_coordinate(proximity_matrix.proximity_matrix)
+        # Calculate min value and get min coordinate, form: [x_axis, y_axis, min_value]
+        min_coordinate_and_minvalue = ProximityMatrix.find_min_coordinate(proximity_matrix.proximity_matrix)
 
-    # Pop two days from day deck
-    first_day = day_deck.dayDeck.pop(min_coordinate_and_minvalue[0])
-    second_day = day_deck.dayDeck.pop(min_coordinate_and_minvalue[0] + min_coordinate_and_minvalue[1])
+        # Pop two days from day deck
+        first_day = day_deck.dayDeck.pop(min_coordinate_and_minvalue[0])
+        second_day = day_deck.dayDeck.pop(min_coordinate_and_minvalue[0] + min_coordinate_and_minvalue[1])
 
-    # cluster two days
-    day_deck.clustering(first_day, second_day)
+        # cluster two days
+        day_deck.clustering(first_day, second_day)
 
-    # Add it to linkage list
-    linkage_list.add_linkage_element(first_day.date_num,
-                                     second_day.date_num,
-                                     min_coordinate_and_minvalue[2],
-                                     first_day.num_of_clustered + second_day.num_of_clustered)
+        # Add it to linkage list
+        linkage_list.add_linkage_element(first_day.date_num,
+                                         second_day.date_num,
+                                         min_coordinate_and_minvalue[2],
+                                         first_day.num_of_clustered + second_day.num_of_clustered)
 
-    print(linkage_list.linkage_list)
+    # print(linkage_list.linkage_list)
+
+    # day = day_deck.dayDeck[0]
+    # print(day.get_pir_list())
+    # for ele in day.get_lumen_list():
+    #     print(ele)
+    # for ele in day.get_temp_list():
+    #     print(ele)
+    # for ele in day.get_power_list():
+    #     print(ele)
+
+
+def data_visualization(day_deck, linkage_list):
+    dv.presentation_dendrogram(day_deck, linkage_list)
 

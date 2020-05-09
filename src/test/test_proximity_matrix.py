@@ -69,3 +69,7 @@ class TestProximityMatrix(TestCase):
         proximity_matrix = [[1, 1, 3], [0, 4], [0]]
         return_value = self.proximity_matrix.find_min_coordinate(proximity_matrix)
         self.assertEqual([1, 0, 0], return_value)
+
+        proximity_matrix = [[10000]]
+        return_value = self.proximity_matrix.find_min_coordinate(proximity_matrix)
+        self.assertEqual([0, 0, 10000], return_value)

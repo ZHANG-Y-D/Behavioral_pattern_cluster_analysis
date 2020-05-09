@@ -36,9 +36,20 @@ class ProximityMatrix:
     @staticmethod
     def calculate_1d_distance(ele_first, ele_second):
         distance = 0
+        # for i in range(len(ele_first)):
+        #     if ele_first[i] != ele_second[i] and \
+        #             ele_first[i] != 'X' and ele_second[i] != 'X':
+        #         distance += 1
+        # return distance
+
+        # for i in range(len(ele_first)):
+        #     if ele_first[i] != ele_second[i]:
+        #         distance += 1
+        # return distance
+
         for i in range(len(ele_first)):
-            if ele_first[i] != ele_second[i] and \
-                    ele_first[i] != 'X' and ele_second[i] != 'X':
+            if ele_first[i] != ele_second[i] or \
+                    ele_first[i] == 'X' or ele_second[i] == 'X':
                 distance += 1
         return distance
 
