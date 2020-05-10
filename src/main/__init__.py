@@ -53,3 +53,5 @@ max_cluster = input("please enter the max cluster for "
                     "presentation the common pattern(\033[1;35m recommended 1 to 3 \033[0m):")
 common_pattern_list = hierarchical_clustering(dayDeck, linkage_list, int(max_cluster))
 data_visualization(dayDeck, linkage_list.linkage_list, common_pattern_list)
+
+sqlTool.close_connect()

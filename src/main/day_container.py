@@ -129,53 +129,6 @@ class DayContainer:
         index = self.find_index(time_curr, appliances_sampling_interval[power_position])
         self.power_sensor[power_position][index] = power_level
 
-    @staticmethod
-    def find_index(t_from, sampling_interval):
-        # Sampling_interval unit is second.
-        index = t_from.hour * 3600 / sampling_interval
-        index = int(t_from.minute * 60 / sampling_interval) + index
-        if sampling_interval <= 60 and t_from.second >= 30:
-            index += 1
-        return int(index)
-
-    @staticmethod
-    def normalisation_time(date_curr, time_value, sampling_interval):
-        """
-            Sampling_interval unit is second.
-            The sampling interval is
-                pir 30s
-                lumen 300s
-                temp 1200s
-        """
-        if date_curr is None or time_value.date() == date_curr:
-            if sampling_interval >= 60:
-                time_value = time_value.replace(second=0)
-                time_value = time_value.replace(minute=
-                                                time_value.minute -
-                                                time_value.minute %
-                                                int(sampling_interval / 60))
-            else:
-                if time_value.second < 30:
-                    time_value = time_value.replace(second=0)
-                else:
-                    time_value = time_value.replace(second=30)
-        elif time_value.date() < date_curr:
-            time_value = time_value.replace(year=date_curr.year,
-                                            month=date_curr.month,
-                                            day=date_curr.day,
-                                            hour=0,
-                                            minute=0,
-                                            second=0)
-        else:
-            time_value = time_value.replace(year=date_curr.year,
-                                            month=date_curr.month,
-                                            day=date_curr.day,
-                                            hour=23,
-                                            minute=59,
-                                            second=30)
-
-        return time_value
-
     def fill_black_for_pir_list(self):
         """
         It is used to fill in the pir list blanks,
@@ -209,36 +162,6 @@ class DayContainer:
                 self.pir_sensor[index] = \
                     self.get_pir_list()[index - 1][-1]
             index += 1
-
-    @staticmethod
-    def determine_lumen_level(value, time_curr):
-        """
-         We determine the lumen level according to sunrise and sunset，
-         The sunrise and sunset times for Milan in April are from 6:30~20:00
-         Lumen level is from 0 to 5 (whitch is from 'buio' to 'ottima')
-         Day is 0 20 40 150 300
-         Night is 0 5 20 110 200
-        """
-        value = int(value)
-        day_level = [0, 20, 40, 150, 300]
-        night_level = [0, 5, 20, 110, 200]
-        if time(6, 30, 00) < time_curr.time() <= time(20, 00, 00):
-            level = day_level
-        else:
-            level = night_level
-
-        if value == level[0]:
-            return 0
-        elif level[0] < value <= level[1]:
-            return 1
-        elif level[1] < value <= level[2]:
-            return 2
-        elif level[2] < value <= level[3]:
-            return 3
-        elif level[3] < value <= level[4]:
-            return 4
-        else:
-            return 5
 
     def fill_black_for_list(self, list_type):
         """
@@ -320,6 +243,83 @@ class DayContainer:
         all_list = \
             [self.get_pir_list(), self.get_lumen_list(), self.get_temp_list(), self.get_power_list()]
         return all_list
+
+    @staticmethod
+    def find_index(t_from, sampling_interval):
+        # Sampling_interval unit is second.
+        index = t_from.hour * 3600 / sampling_interval
+        index = int(t_from.minute * 60 / sampling_interval) + index
+        if sampling_interval <= 60 and t_from.second >= 30:
+            index += 1
+        return int(index)
+
+    @staticmethod
+    def normalisation_time(date_curr, time_value, sampling_interval):
+        """
+            Sampling_interval unit is second.
+            The sampling interval is
+                pir 30s
+                lumen 300s
+                temp 1200s
+        """
+        if date_curr is None or time_value.date() == date_curr:
+            if sampling_interval >= 60:
+                time_value = time_value.replace(second=0)
+                time_value = time_value.replace(minute=
+                                                time_value.minute -
+                                                time_value.minute %
+                                                int(sampling_interval / 60))
+            else:
+                if time_value.second < 30:
+                    time_value = time_value.replace(second=0)
+                else:
+                    time_value = time_value.replace(second=30)
+        elif time_value.date() < date_curr:
+            time_value = time_value.replace(year=date_curr.year,
+                                            month=date_curr.month,
+                                            day=date_curr.day,
+                                            hour=0,
+                                            minute=0,
+                                            second=0)
+        else:
+            time_value = time_value.replace(year=date_curr.year,
+                                            month=date_curr.month,
+                                            day=date_curr.day,
+                                            hour=23,
+                                            minute=59,
+                                            second=30)
+
+        return time_value
+
+    @staticmethod
+    def determine_lumen_level(value, time_curr):
+        """
+         We determine the lumen level according to sunrise and sunset，
+         The sunrise and sunset times for Milan in April are from 6:30~20:00
+         Lumen level is from 0 to 5 (whitch is from 'buio' to 'ottima')
+         Day is 0 20 40 150 300
+         Night is 0 5 20 110 200
+        """
+        value = int(value)
+        day_level = [0, 20, 40, 150, 300]
+        night_level = [0, 5, 20, 110, 200]
+        if time(6, 30, 00) < time_curr.time() <= time(20, 00, 00):
+            level = day_level
+        else:
+            level = night_level
+
+        if value == level[0]:
+            return 0
+        elif level[0] < value <= level[1]:
+            return 1
+        elif level[1] < value <= level[2]:
+            return 2
+        elif level[2] < value <= level[3]:
+            return 3
+        elif level[3] < value <= level[4]:
+            return 4
+        else:
+            return 5
 
     @staticmethod
     def determine_temp_level(value):
