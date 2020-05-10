@@ -6,13 +6,15 @@ from day_deck import DayDeck
 dayDeck = DayDeck()
 sqlTool = SQLTool()
 linkage_list = LinkageContainer()
+appliances_sampling_interval = [30, 120, 300, 1200, 120, 120, 120, 120, 120]
+
 
 build_day_container(sqlTool, dayDeck)
 
 build_pir_list(sqlTool, dayDeck.get_list_of_day())
-# build_lumen_list(sqlTool, dayDeck.get_list_of_day())
-# build_temp_list(sqlTool, dayDeck.get_list_of_day())
-# build_power_list(sqlTool, dayDeck.get_list_of_day())
+build_lumen_list(sqlTool, dayDeck.get_list_of_day())
+build_temp_list(sqlTool, dayDeck.get_list_of_day())
+build_power_list(sqlTool, dayDeck.get_list_of_day(), appliances_sampling_interval)
 
 common_pattern_list = hierarchical_clustering(dayDeck, linkage_list, 3)
-data_visualization(dayDeck, linkage_list.linkage_list, common_pattern_list)
+data_visualization(dayDeck, linkage_list.linkage_list, common_pattern_list, appliances_sampling_interval)

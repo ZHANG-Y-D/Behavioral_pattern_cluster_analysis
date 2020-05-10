@@ -72,8 +72,7 @@ def build_temp_list(sql_tool, list_of_day_deck):
         #     print(ele)
 
 
-def build_power_list(sql_tool, list_of_day_deck):
-    appliances_sampling_interval = [30, 120, 300, 1200, 120, 120, 120, 120, 120]
+def build_power_list(sql_tool, list_of_day_deck, appliances_sampling_interval):
     for day_container in list_of_day_deck:
         day_container.init_power_list(appliances_sampling_interval)
         date_curr = day_container.get_date().strftime('%Y-%m-%d')
@@ -86,7 +85,7 @@ def build_power_list(sql_tool, list_of_day_deck):
             day_container.add_power_value(tuple_curr, appliances_sampling_interval)
 
         day_container.fill_black_for_list("power")
-
+        #
         # for ele in day_container.get_power_list():
         #     print(ele)
 
@@ -149,7 +148,7 @@ def hierarchical_clustering(day_deck, linkage_list, max_cluster):
     #     print(ele)
 
 
-def data_visualization(day_deck, linkage_list, common_pattern_list):
+def data_visualization(day_deck, linkage_list, common_pattern_list, appliances_sampling_interval):
     dv.presentation_dendrogram(day_deck, linkage_list)
-    dv.presentation_common_pattern(common_pattern_list)
+    dv.presentation_common_pattern(common_pattern_list, appliances_sampling_interval)
     dv.show_all_figure()
