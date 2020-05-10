@@ -6,16 +6,6 @@ import data_visualization as dv
 
 def build_day_container(sql_tool, day_deck):
     value = sql_tool.query_from_sql("select date(t_from) as date from person_position group by date order by date;")
-    # value.pop(0)
-    # value.pop(0)
-    # value.pop(-1)
-    # value.pop(-1)
-    # value.pop(-1)
-
-    # value.pop(1)
-    # value.pop(-1)
-    # value.pop(-2)
-    # value.pop(-3)
 
     for i, date in enumerate(value):
         day_deck.add_date(date[0], i)
@@ -24,6 +14,7 @@ def build_day_container(sql_tool, day_deck):
 
 
 def build_pir_list(sql_tool, list_of_day_deck):
+    print("Building PIR sensor list...")
     for day_container in list_of_day_deck:
         day_container.init_pir_list(2880)
         date_curr = day_container.get_date().strftime("%Y-%m-%d")
@@ -39,6 +30,7 @@ def build_pir_list(sql_tool, list_of_day_deck):
 
 
 def build_lumen_list(sql_tool, list_of_day_deck):
+    print("Building Lumen sensor list...")
     for day_container in list_of_day_deck:
         day_container.init_lumen_list(288)
         date_curr = day_container.get_date().strftime('%Y-%m-%d')
@@ -56,6 +48,7 @@ def build_lumen_list(sql_tool, list_of_day_deck):
 
 
 def build_temp_list(sql_tool, list_of_day_deck):
+    print("Building temperature sensor list...")
     for day_container in list_of_day_deck:
         day_container.init_temp_list(72)
         date_curr = day_container.get_date().strftime('%Y-%m-%d')
@@ -72,8 +65,10 @@ def build_temp_list(sql_tool, list_of_day_deck):
         #     print(ele)
 
 
-def build_power_list(sql_tool, list_of_day_deck, appliances_sampling_interval):
+def build_power_list(sql_tool, list_of_day_deck):
+    print("Building power sensor list...")
     for day_container in list_of_day_deck:
+        appliances_sampling_interval = day_container.appliances_sampling_interval
         day_container.init_power_list(appliances_sampling_interval)
         date_curr = day_container.get_date().strftime('%Y-%m-%d')
         query_result = sql_tool.query_from_sql("SELECT se.id_sensor, sd.value, se.threshold, sd.timestamp "
@@ -102,6 +97,7 @@ def proximity_matrix_generator(list_of_day_deck, proximity_matrix):
 
 
 def hierarchical_clustering(day_deck, linkage_list, max_cluster):
+    print("Executing hierarchical clustering...")
     proximity_matrix = ProximityMatrix()
     common_pattern_list = []
 
@@ -135,20 +131,11 @@ def hierarchical_clustering(day_deck, linkage_list, max_cluster):
         if len(day_deck.dayDeck) == max_cluster:
             common_pattern_list = copy.deepcopy(day_deck.dayDeck)
 
-    return common_pattern_list
     # print(linkage_list.linkage_list)
-
-    # day = day_deck.dayDeck[0]
-    # print(day.get_pir_list())
-    # for ele in day.get_lumen_list():
-    #     print(ele)
-    # for ele in day.get_temp_list():
-    #     print(ele)
-    # for ele in day.get_power_list():
-    #     print(ele)
+    return common_pattern_list
 
 
-def data_visualization(day_deck, linkage_list, common_pattern_list, appliances_sampling_interval):
+def data_visualization(day_deck, linkage_list, common_pattern_list):
     dv.presentation_dendrogram(day_deck, linkage_list)
-    dv.presentation_common_pattern(common_pattern_list, appliances_sampling_interval)
+    dv.presentation_common_pattern(common_pattern_list, day_deck.dayDeck[0].appliances_sampling_interval)
     dv.show_all_figure()

@@ -5,12 +5,15 @@ import matplotlib.pyplot as plt
 
 
 def presentation_dendrogram(day_deck, linkage):
+    print("Executing dendrogram presentation...")
     plt.figure(1)
     dendrogram(linkage, labels=day_deck.data_name_labels)
     plt.title("Hierarchical Clustering")
 
 
 def presentation_common_pattern(common_pattern_list, appliances_sampling_interval):
+    print("Executing common pattern presentation...")
+    print("Hint:Maximize the window to get the best visual effect.")
     for i, ele in enumerate(common_pattern_list):
 
         plot = plt.figure(i + 2)
