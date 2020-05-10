@@ -61,6 +61,7 @@ class DayContainer:
             [None] * int((60 * 60 * 24) / appliances_sampling_interval[8])  # PC
 
     def add_pir_value(self, tuple_curr):
+        # print(tuple_curr)
         """
             id_room from 1 to 10. We use a to represent 10，
             which is 1 2 3 4 5 6 7 8 9 a, a is 10.

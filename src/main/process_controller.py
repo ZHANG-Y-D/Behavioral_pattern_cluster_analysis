@@ -1,3 +1,5 @@
+import copy
+
 from proximity_matrix import ProximityMatrix
 import data_visualization as dv
 
@@ -5,7 +7,15 @@ import data_visualization as dv
 def build_day_container(sql_tool, day_deck):
     value = sql_tool.query_from_sql("select date(t_from) as date from person_position group by date order by date;")
     # value.pop(0)
-    # value.pop()  # Because the data on the first and last day are not complete, exclude
+    # value.pop(0)
+    # value.pop(-1)
+    # value.pop(-1)
+    # value.pop(-1)
+
+    # value.pop(1)
+    # value.pop(-1)
+    # value.pop(-2)
+    # value.pop(-3)
 
     for i, date in enumerate(value):
         day_deck.add_date(date[0], i)
@@ -22,11 +32,9 @@ def build_pir_list(sql_tool, list_of_day_deck):
                                                + date_curr + "'order by t_from, t_to, id_room;")
         for tuple_curr in query_result:
             day_container.add_pir_value(tuple_curr)
-            # print(tuple_curr)
 
-        # print("-------------------------------")
-        # print(day_container.get_pir_list())
         day_container.fill_black_for_pir_list()
+
         # print(day_container.get_pir_list())
 
 
@@ -41,10 +49,8 @@ def build_lumen_list(sql_tool, list_of_day_deck):
         for tuple_curr in query_result:
             day_container.add_lumen_value(tuple_curr)
 
-        # print("-------------------------------")
-        # for ele in day_container.get_lumen_list():
-        #     print(ele)
         day_container.fill_black_for_list("lumen")
+
         # for ele in day_container.get_lumen_list():
         #     print(ele)
 
@@ -60,10 +66,8 @@ def build_temp_list(sql_tool, list_of_day_deck):
         for tuple_curr in query_result:
             day_container.add_temp_value(tuple_curr)
 
-        # print("-------------------------------")
-        # for ele in day_container.get_temp_list():
-        #     print(ele)
         day_container.fill_black_for_list("temp")
+
         # for ele in day_container.get_temp_list():
         #     print(ele)
 
@@ -81,10 +85,8 @@ def build_power_list(sql_tool, list_of_day_deck):
         for tuple_curr in query_result:
             day_container.add_power_value(tuple_curr, appliances_sampling_interval)
 
-        # print("-------------------------------")
-        # for ele in day_container.get_power_list():
-        #     print(ele)
         day_container.fill_black_for_list("power")
+
         # for ele in day_container.get_power_list():
         #     print(ele)
 
@@ -100,10 +102,18 @@ def proximity_matrix_generator(list_of_day_deck, proximity_matrix):
     #     print(ele)
 
 
-def hierarchical_clustering(day_deck, linkage_list):
+def hierarchical_clustering(day_deck, linkage_list, max_cluster):
     proximity_matrix = ProximityMatrix()
+    common_pattern_list = []
+
+    # Limit of max cluster value
+    if max_cluster >= len(day_deck.dayDeck):
+        common_pattern_list = copy.deepcopy(day_deck.dayDeck)
+    if max_cluster == 0:
+        max_cluster = 1
 
     while len(day_deck.dayDeck) > 1:
+
         # Generate thw proximity matrix
         proximity_matrix_generator(day_deck.get_list_of_day(), proximity_matrix)
 
@@ -123,6 +133,10 @@ def hierarchical_clustering(day_deck, linkage_list):
                                          min_coordinate_and_minvalue[2],
                                          first_day.num_of_clustered + second_day.num_of_clustered)
 
+        if len(day_deck.dayDeck) == max_cluster:
+            common_pattern_list = copy.deepcopy(day_deck.dayDeck)
+
+    return common_pattern_list
     # print(linkage_list.linkage_list)
 
     # day = day_deck.dayDeck[0]
@@ -135,6 +149,7 @@ def hierarchical_clustering(day_deck, linkage_list):
     #     print(ele)
 
 
-def data_visualization(day_deck, linkage_list):
+def data_visualization(day_deck, linkage_list, common_pattern_list):
     dv.presentation_dendrogram(day_deck, linkage_list)
-
+    dv.presentation_common_pattern(common_pattern_list)
+    dv.show_all_figure()
