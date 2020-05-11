@@ -1,22 +1,37 @@
 from unittest import TestCase
-import data_visualization as dv
 import matplotlib.pyplot as plt
-
+import data_visualization as dv
+from day_container import DayContainer
 from day_deck import DayDeck
+from datetime import date
 
 
 class Test(TestCase):
     def setUp(self):
-        self.ax = plt.figure(0).subplots(2, 2)
+        self.ax = plt.figure().subplots(2, 2)
 
     def test_presentation_dendrogram(self):
         linkage_list = [[0.0, 1.0, 2.0, 3.0], [2, 3, 3, 2], [4, 7, 6.2, 3], [5, 8, 13.9, 4], [6, 9, 30, 5]]
         dv.presentation_dendrogram(None, linkage_list, color_threshold=13)
         dv.show_all_figure()
 
-    def test_presentation_common_pattern(self):
-        # dv.presentation_common_pattern()
-        pass
+    def test_presentation_calendar(self):
+        day_deck = DayDeck()
+        day_container1 = DayContainer(date(2020, 10, 8), 0)
+        day_container2 = DayContainer(date(2020, 11, 8), 1)
+        day_container3 = DayContainer(date(2020, 11, 9), 2)
+        # day_container1.clustered_date = [date(2019, 1, 1), date(2019, 1, 2), date(2019, 1, 3)]
+        # day_container2.clustered_date = [date(2019, 2, 1), date(2019, 2, 2), date(2019, 2, 3)]
+        day_container1.clustered_date = [date(2020, 1, 1), date(2020, 1, 2), date(2020, 1, 3)]
+        day_container2.clustered_date = [date(2019, 2, 1), date(2019, 2, 2), date(2019, 2, 3)]
+        day_container3.clustered_date = [date(2021, 2, 1)]
+        day_deck.dayDeck.append(day_container1)
+        day_deck.dayDeck.append(day_container2)
+        day_deck.dayDeck.append(day_container3)
+        common_pattern_list = day_deck.dayDeck
+        color_list = ['r', 'r', 'b', 'b', 'g', 'b', 'c']
+        dv.presentation_calendar(common_pattern_list, color_list)
+        dv.show_all_figure()
 
     def test_presentation_pir_list(self):
         # pir_list = ['71238', '734',

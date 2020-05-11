@@ -136,6 +136,8 @@ def hierarchical_clustering(day_deck, linkage_list, max_cluster):
 
 
 def data_visualization(day_deck, linkage_list, common_pattern_list, color_threshold=None):
-    dv.presentation_dendrogram(day_deck, linkage_list, color_threshold=color_threshold)
-    dv.presentation_common_pattern(common_pattern_list, day_deck.dayDeck[0].appliances_sampling_interval)
-    dv.show_all_figure()
+    color_list = dv.presentation_dendrogram(day_deck, linkage_list, color_threshold=color_threshold)
+    print(color_list)
+    dv.presentation_calendar(common_pattern_list, color_list)
+    # dv.presentation_common_pattern(common_pattern_list, day_deck.dayDeck[0].appliances_sampling_interval)
+    # dv.show_all_figure()

@@ -1,5 +1,4 @@
 from unittest import TestCase
-
 from day_deck import DayDeck
 
 

@@ -1,3 +1,4 @@
+import copy
 import math
 import matplotlib.pyplot as plt
 from scipy.cluster.hierarchy import dendrogram
@@ -10,37 +11,71 @@ def presentation_dendrogram(day_deck, linkage, color_threshold=None):
     else:
         label = None
     plt.figure()
-    print(dendrogram(linkage, labels=label, color_threshold=color_threshold))
+    color_list = dendrogram(linkage, labels=label, color_threshold=color_threshold)
     plt.title("Hierarchical Clustering")
+    return color_list['color_list']
 
 
-def plot_calendar(common_pattern_list):
-    cal_plotter = plt.figure()
+def set_parameter_for_axis(ax, year):
+    ax.set_title(str(year))
+
+    # For days
+    ax.set_xlim(0, 32)
+    day_label = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31]
+    ax.set_xticks(day_label)
+    ax.set_xticklabels([str(ele) for ele in day_label])
+
+    # For months
+    ax.set_ylim(0, 13)
+    ax.set_yticks(list(range(1, 13)))
+    ax.set_yticklabels(['January', 'February', 'March', 'April',
+                        'May', 'June', 'July', 'August', 'September',
+                        'October', 'November', 'December'])
+
+
+def presentation_calendar(common_pattern_list, color_list):
     year_list = []
+
+    # Build the color list
+    color_list = sorted(set(color_list), key=color_list.index)
+    color_list.remove('b')
 
     # Find out how many years there are
     for ele in common_pattern_list:
         for date in ele.clustered_date:
             if date.year not in year_list:
                 year_list.append(date.year)
-    length_width = math.ceil(math.sqrt(len(year_list)))
-    cal_plotter = cal_plotter.subplots(length_width, length_width)
+    ax = plt.figure().subplots(len(year_list))
 
-    # Set title for each year
-    for year in year_list:
-        index = year_list.index(year)
-        cal_plotter = cal_plotter[math.floor(index / length_width), index % 4]
-        cal_plotter.set_title(str(year))
+    # Set coefficient for each year
+    if len(year_list) == 1:
+        set_parameter_for_axis(ax, year_list[0])
+    else:
+        for year in year_list:
+            index = year_list.index(year)
+            set_parameter_for_axis(ax[index], year)
 
     # Color for date on the corresponding year
+    common_pattern_list = copy.deepcopy(common_pattern_list)
     for ele in common_pattern_list:
+        # Determinate color for this day
+        if len(ele.clustered_date) == 1:
+            color = 'b'
+            common_pattern_list.remove(ele)
+        else:
+            color = color_list[common_pattern_list.index(ele)]
+            print(color)
+            print(common_pattern_list.index(ele))
+            # todo here fix color bug
         for date in ele.clustered_date:
-            index = year_list.index(date.year)
-            cal_plotter = cal_plotter[math.floor(index / length_width), index % 4]
+            if len(year_list) > 1:
+                index = year_list.index(date.year)
+                ax[index].broken_barh([(date.day - 0.4, 0.8)], (date.month - 0.4, 0.8), facecolors=color)
+            else:
+                ax.broken_barh([(date.day - 0.4, 0.8)], (date.month - 0.4, 0.8), facecolors=color)
 
 
 def presentation_common_pattern(common_pattern_list, appliances_sampling_interval):
-    # plot_calendar(common_pattern_list)
     print("Executing common pattern presentation...")
     for ele in common_pattern_list:
 
