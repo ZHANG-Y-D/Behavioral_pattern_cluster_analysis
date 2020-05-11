@@ -1,23 +1,37 @@
-import math
-
-from scipy.cluster.hierarchy import dendrogram
 import matplotlib.pyplot as plt
+from scipy.cluster.hierarchy import dendrogram
 
 
-def presentation_dendrogram(day_deck, linkage):
+def presentation_dendrogram(day_deck, linkage, color_threshold=None):
     print("Executing dendrogram presentation...")
-    plt.figure(1)
-    dendrogram(linkage, labels=day_deck.data_name_labels)
+    if day_deck is not None:
+        label = day_deck.data_name_labels
+    else:
+        label = None
+    plt.figure()
+    dendrogram(linkage, labels=label, color_threshold=color_threshold)
     plt.title("Hierarchical Clustering")
 
 
 def presentation_common_pattern(common_pattern_list, appliances_sampling_interval):
     print("Executing common pattern presentation...")
     print("Hint:Maximize the window to get the best visual effect.")
-    for i, ele in enumerate(common_pattern_list):
+    for ele in common_pattern_list:
 
-        plot = plt.figure(i + 2)
-        plot.suptitle('Common Pattern ' + str(i + 1))
+        plot = plt.figure()
+
+        if len(ele.clustered_date) == 1:
+            plot.suptitle('Abnormal days: ' + ele.clustered_date[0].strftime("%Y-%m-%d"))
+            print("Presenting abnormal days: " + ele.clustered_date[0].strftime("%Y-%m-%d") + "...")
+        else:
+            ele.clustered_date.sort()
+            common_pattern_date = ""
+            for date in ele.clustered_date:
+                common_pattern_date = common_pattern_date + date.strftime("%Y-%m-%d")
+                common_pattern_date = common_pattern_date + "  "
+            plot.suptitle('Common Pattern: ' + common_pattern_date)
+            print("Presenting common pattern: " + common_pattern_date + "...")
+
         ax = plot.subplots(2, 2)
 
         if ele.get_pir_list() is not None:

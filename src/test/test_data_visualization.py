@@ -2,10 +2,17 @@ from unittest import TestCase
 import data_visualization as dv
 import matplotlib.pyplot as plt
 
+from day_deck import DayDeck
+
 
 class Test(TestCase):
     def setUp(self):
         self.ax = plt.figure(0).subplots(2, 2)
+
+    def test_presentation_dendrogram(self):
+        linkage_list = [[0.0, 1.0, 2.0, 3.0], [2, 3, 3, 2], [4, 7, 6.2, 3], [5, 8, 13.9, 4], [6, 9, 30, 5]]
+        dv.presentation_dendrogram(None, linkage_list, color_threshold=13)
+        dv.show_all_figure()
 
     def test_presentation_common_pattern(self):
         # dv.presentation_common_pattern()

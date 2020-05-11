@@ -31,7 +31,7 @@ class DayDeck:
         self.date_num_of_clustering += 1
 
         # Add total number clustered element
-        after_clustering.num_of_clustered = first_day.num_of_clustered + second_day.num_of_clustered
+        after_clustering.clustered_date = first_day.clustered_date + second_day.clustered_date
 
         # Cluster all available list for two days
         if first_day.get_pir_list() and second_day.get_pir_list() is not None:

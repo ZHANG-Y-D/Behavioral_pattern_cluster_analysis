@@ -126,7 +126,7 @@ def hierarchical_clustering(day_deck, linkage_list, max_cluster):
         linkage_list.add_linkage_element(first_day.date_num,
                                          second_day.date_num,
                                          min_coordinate_and_minvalue[2],
-                                         first_day.num_of_clustered + second_day.num_of_clustered)
+                                         len(first_day.clustered_date) + len(second_day.clustered_date))
 
         if len(day_deck.dayDeck) == max_cluster:
             common_pattern_list = copy.deepcopy(day_deck.dayDeck)
@@ -135,7 +135,7 @@ def hierarchical_clustering(day_deck, linkage_list, max_cluster):
     return common_pattern_list
 
 
-def data_visualization(day_deck, linkage_list, common_pattern_list):
-    dv.presentation_dendrogram(day_deck, linkage_list)
+def data_visualization(day_deck, linkage_list, common_pattern_list, color_threshold=None):
+    dv.presentation_dendrogram(day_deck, linkage_list, color_threshold=color_threshold)
     dv.presentation_common_pattern(common_pattern_list, day_deck.dayDeck[0].appliances_sampling_interval)
     dv.show_all_figure()
