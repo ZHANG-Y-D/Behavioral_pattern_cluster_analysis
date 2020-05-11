@@ -1,3 +1,4 @@
+import math
 import matplotlib.pyplot as plt
 from scipy.cluster.hierarchy import dendrogram
 
@@ -9,20 +10,45 @@ def presentation_dendrogram(day_deck, linkage, color_threshold=None):
     else:
         label = None
     plt.figure()
-    dendrogram(linkage, labels=label, color_threshold=color_threshold)
+    print(dendrogram(linkage, labels=label, color_threshold=color_threshold))
     plt.title("Hierarchical Clustering")
 
 
+def plot_calendar(common_pattern_list):
+    cal_plotter = plt.figure()
+    year_list = []
+
+    # Find out how many years there are
+    for ele in common_pattern_list:
+        for date in ele.clustered_date:
+            if date.year not in year_list:
+                year_list.append(date.year)
+    length_width = math.ceil(math.sqrt(len(year_list)))
+    cal_plotter = cal_plotter.subplots(length_width, length_width)
+
+    # Set title for each year
+    for year in year_list:
+        index = year_list.index(year)
+        cal_plotter = cal_plotter[math.floor(index / length_width), index % 4]
+        cal_plotter.set_title(str(year))
+
+    # Color for date on the corresponding year
+    for ele in common_pattern_list:
+        for date in ele.clustered_date:
+            index = year_list.index(date.year)
+            cal_plotter = cal_plotter[math.floor(index / length_width), index % 4]
+
+
 def presentation_common_pattern(common_pattern_list, appliances_sampling_interval):
+    # plot_calendar(common_pattern_list)
     print("Executing common pattern presentation...")
-    print("Hint:Maximize the window to get the best visual effect.")
     for ele in common_pattern_list:
 
         plot = plt.figure()
 
         if len(ele.clustered_date) == 1:
             plot.suptitle('Abnormal days: ' + ele.clustered_date[0].strftime("%Y-%m-%d"))
-            print("Presenting abnormal days: " + ele.clustered_date[0].strftime("%Y-%m-%d") + "...")
+            print("Presenting abnormal days: " + ele.clustered_date[0].strftime("%Y-%m-%d"))
         else:
             ele.clustered_date.sort()
             common_pattern_date = ""
@@ -30,7 +56,7 @@ def presentation_common_pattern(common_pattern_list, appliances_sampling_interva
                 common_pattern_date = common_pattern_date + date.strftime("%Y-%m-%d")
                 common_pattern_date = common_pattern_date + "  "
             plot.suptitle('Common Pattern: ' + common_pattern_date)
-            print("Presenting common pattern: " + common_pattern_date + "...")
+            print("Presenting common pattern: " + common_pattern_date)
 
         ax = plot.subplots(2, 2)
 
@@ -42,6 +68,7 @@ def presentation_common_pattern(common_pattern_list, appliances_sampling_interva
             presentation_temp_list(ax[1, 0], ele.get_temp_list())
         if ele.get_power_list() is not None:
             presentation_power_list(ax[1, 1], ele.get_power_list(), appliances_sampling_interval)
+    print("Hint:Maximize the window to get the best visual effect.")
 
 
 def presentation_lumen_list(ax, lumen_list):
