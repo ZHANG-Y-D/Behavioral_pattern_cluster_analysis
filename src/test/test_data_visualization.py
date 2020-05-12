@@ -17,19 +17,28 @@ class Test(TestCase):
 
     def test_presentation_calendar(self):
         day_deck = DayDeck()
+        day_container0 = DayContainer(date(2020, 10, 8), 0)
         day_container1 = DayContainer(date(2020, 10, 8), 0)
         day_container2 = DayContainer(date(2020, 11, 8), 1)
         day_container3 = DayContainer(date(2020, 11, 9), 2)
+        day_container4 = DayContainer(date(2020, 11, 9), 2)
+
+        day_container0.clustered_date = [date(2019, 8, 1)]
         # day_container1.clustered_date = [date(2019, 1, 1), date(2019, 1, 2), date(2019, 1, 3)]
         # day_container2.clustered_date = [date(2019, 2, 1), date(2019, 2, 2), date(2019, 2, 3)]
         day_container1.clustered_date = [date(2020, 1, 1), date(2020, 1, 2), date(2020, 1, 3)]
-        day_container2.clustered_date = [date(2019, 2, 1), date(2019, 2, 2), date(2019, 2, 3)]
-        day_container3.clustered_date = [date(2021, 2, 1)]
+        day_container2.clustered_date = [date(2020, 7, 1)]
+        day_container3.clustered_date = [date(2019, 2, 1), date(2019, 2, 2), date(2019, 2, 3)]
+        day_container4.clustered_date = [date(2021, 7, 1)]
+
+        day_deck.dayDeck.append(day_container0)
         day_deck.dayDeck.append(day_container1)
         day_deck.dayDeck.append(day_container2)
         day_deck.dayDeck.append(day_container3)
+        day_deck.dayDeck.append(day_container4)
+
         common_pattern_list = day_deck.dayDeck
-        color_list = ['r', 'r', 'b', 'b', 'g', 'b', 'c']
+        color_list = ['b', 'r', 'r', 'b', 'b', 'g', 'b']
         dv.presentation_calendar(common_pattern_list, color_list)
         dv.show_all_figure()
 

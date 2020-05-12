@@ -68,14 +68,19 @@ else:
     build_power_list(sqlTool, dayDeck.get_list_of_day())
 
 print("Preparing exec hierarchical clustering")
-print("please enter the max cluster for "
+print("please enter the the desired number of clusters(max cluster) for "
       "presentation the common pattern(\033[1;35m recommended 1 to 5 \033[0m).")
-max_cluster = read_a_number(1, None, False)
-common_pattern_list = hierarchical_clustering(dayDeck, linkage_list, max_cluster)
+common_pattern_list, the_corresponding_level_of_max_cluster = \
+    hierarchical_clustering(dayDeck, linkage_list, read_a_number(1, None, False))
 
 print("Please enter the level of critical distance, you can press Enter to input the default value.")
-print("Default value = 0.7*max(Z[:,2]), The default value is recommended when running the program for the first time")
+print("Default value = 0.7*max(Z[:,2]), and\033[1;35m the corresponding level\033[0m of critical distance of "
+      "the desired number of clusters is " + str(the_corresponding_level_of_max_cluster))
 color_threshold = read_a_number(0, None, True)
-data_visualization(dayDeck, linkage_list.linkage_list, common_pattern_list, color_threshold=color_threshold)
+data_visualization(dayDeck,
+                   linkage_list.linkage_list,
+                   common_pattern_list,
+                   the_corresponding_level_of_max_cluster,
+                   color_threshold=color_threshold)
 
 sqlTool.close_connect()

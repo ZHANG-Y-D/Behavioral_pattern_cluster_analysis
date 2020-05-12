@@ -1,10 +1,11 @@
-import copy
-import math
 import matplotlib.pyplot as plt
 from scipy.cluster.hierarchy import dendrogram
 
 
-def presentation_dendrogram(day_deck, linkage, color_threshold=None):
+def presentation_dendrogram(day_deck,
+                            linkage,
+                            the_corresponding_level_of_max_cluster,
+                            color_threshold=None):
     print("Executing dendrogram presentation...")
     if day_deck is not None:
         label = day_deck.data_name_labels
@@ -13,6 +14,17 @@ def presentation_dendrogram(day_deck, linkage, color_threshold=None):
     plt.figure()
     color_list = dendrogram(linkage, labels=label, color_threshold=color_threshold)
     plt.title("Hierarchical Clustering")
+    if color_threshold is None:
+        color_threshold = linkage[-1][2]*0.7
+    plt.axhline(y=the_corresponding_level_of_max_cluster,
+                label='The desired number of clusters',
+                color='violet',
+                linestyle='--')
+    plt.axhline(y=color_threshold,
+                label='Level of critical distance: DT',
+                color='tomato',
+                linestyle=':')
+    plt.legend()
     return color_list['color_list']
 
 
@@ -34,11 +46,13 @@ def set_parameter_for_axis(ax, year):
 
 
 def presentation_calendar(common_pattern_list, color_list):
+    print("Executing calendar presentation...")
     year_list = []
 
     # Build the color list
     color_list = sorted(set(color_list), key=color_list.index)
-    color_list.remove('b')
+    if 'b' in color_list:
+        color_list.remove('b')
 
     # Find out how many years there are
     for ele in common_pattern_list:
@@ -52,25 +66,20 @@ def presentation_calendar(common_pattern_list, color_list):
         set_parameter_for_axis(ax, year_list[0])
     else:
         for year in year_list:
-            index = year_list.index(year)
-            set_parameter_for_axis(ax[index], year)
+            set_parameter_for_axis(ax[year_list.index(year)], year)
 
     # Color for date on the corresponding year
-    common_pattern_list = copy.deepcopy(common_pattern_list)
     for ele in common_pattern_list:
         # Determinate color for this day
         if len(ele.clustered_date) == 1:
             color = 'b'
-            common_pattern_list.remove(ele)
+            color_list.insert(common_pattern_list.index(ele), color)
         else:
             color = color_list[common_pattern_list.index(ele)]
-            print(color)
-            print(common_pattern_list.index(ele))
-            # todo here fix color bug
         for date in ele.clustered_date:
             if len(year_list) > 1:
-                index = year_list.index(date.year)
-                ax[index].broken_barh([(date.day - 0.4, 0.8)], (date.month - 0.4, 0.8), facecolors=color)
+                ax[year_list.index(date.year)].broken_barh([(date.day - 0.4, 0.8)],
+                                                           (date.month - 0.4, 0.8), facecolors=color)
             else:
                 ax.broken_barh([(date.day - 0.4, 0.8)], (date.month - 0.4, 0.8), facecolors=color)
 
@@ -235,8 +244,6 @@ def presentation_power_list(ax, power_list, appliances_sampling_interval):
 
 
 def presentation_pir_list(ax, pir_list):
-    # print(pir_list)
-
     ax.set_title('The PIR sensor signals')
     ax.set_ylim(0, 12)
     ax.set_xlim(0, 2880)

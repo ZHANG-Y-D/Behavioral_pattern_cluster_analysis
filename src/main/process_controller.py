@@ -100,10 +100,12 @@ def hierarchical_clustering(day_deck, linkage_list, max_cluster):
     print("Executing hierarchical clustering...")
     proximity_matrix = ProximityMatrix()
     common_pattern_list = []
+    the_corresponding_level_of_max_cluster = 0
 
     # Limit of max cluster value
     if max_cluster >= len(day_deck.dayDeck):
         common_pattern_list = copy.deepcopy(day_deck.dayDeck)
+        the_corresponding_level_of_max_cluster = 1
     if max_cluster == 0:
         max_cluster = 1
 
@@ -130,14 +132,22 @@ def hierarchical_clustering(day_deck, linkage_list, max_cluster):
 
         if len(day_deck.dayDeck) == max_cluster:
             common_pattern_list = copy.deepcopy(day_deck.dayDeck)
+            # The corresponding level of critical distance of the desired number of clusters
+            the_corresponding_level_of_max_cluster = min_coordinate_and_minvalue[2]
 
     # print(linkage_list.linkage_list)
-    return common_pattern_list
+    return common_pattern_list, the_corresponding_level_of_max_cluster + 1
 
 
-def data_visualization(day_deck, linkage_list, common_pattern_list, color_threshold=None):
-    color_list = dv.presentation_dendrogram(day_deck, linkage_list, color_threshold=color_threshold)
-    print(color_list)
+def data_visualization(day_deck,
+                       linkage_list,
+                       common_pattern_list,
+                       the_corresponding_level_of_max_cluster,
+                       color_threshold=None):
+    color_list = dv.presentation_dendrogram(day_deck,
+                                            linkage_list,
+                                            the_corresponding_level_of_max_cluster,
+                                            color_threshold=color_threshold)
     dv.presentation_calendar(common_pattern_list, color_list)
-    # dv.presentation_common_pattern(common_pattern_list, day_deck.dayDeck[0].appliances_sampling_interval)
-    # dv.show_all_figure()
+    dv.presentation_common_pattern(common_pattern_list, day_deck.dayDeck[0].appliances_sampling_interval)
+    dv.show_all_figure()
