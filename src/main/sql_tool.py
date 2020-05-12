@@ -12,10 +12,10 @@ class SQLTool:
     def connection_sql(self, dbname, user, password=None, host=None, port=None):
         # user: postgres
         try:
-            self.conn = psycopg2.connect("dbname="+dbname+" user="+user+" password="+
-                                         password+" host="+host+" port="+port)
+            self.conn = psycopg2.connect("dbname=" + dbname + " user=" + user + " password=" +
+                                         password + " host=" + host + " port=" + port)
         except psycopg2.Error as e:
-            print("\033[1;31m Connection database error. \033[0m "+str(e))
+            print("\033[1;31m Connection database error. \033[0m " + str(e))
             print("\033[1;31m Program EXIT, please check the database problem and reopen it, think you! \033[0m ")
             sys.exit()
         self.cur = self.conn.cursor()

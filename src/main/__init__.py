@@ -8,21 +8,26 @@ sqlTool = SQLTool()
 linkage_list = LinkageContainer()
 
 
-def read_a_number(down, up, if_can_be_empty):
+def read_a_number(down, up, if_can_be_empty, input_type=None):
     while True:
         number = input("Enter: ")
         if if_can_be_empty is True and number == '':
             return None
         try:
-            number = int(number)
+            if input_type is None:
+                number = int(number)
+            elif input_type == 'float':
+                number = float(number)
+            else:
+                raise TypeError
         except ValueError:
             print("Please enter a number.")
             continue
         if number < down:
-            print("Please enter a number larger than " + str(down) + ".")
+            print("Please enter a number larger or equal to " + str(down) + ".")
             continue
         elif up is not None and number > up:
-            print("Please enter a number smaller than " + str(up) + ".")
+            print("Please enter a number smaller or equal to " + str(up) + ".")
             continue
         return number
 
@@ -73,10 +78,10 @@ print("please enter the the desired number of clusters(max cluster) for "
 common_pattern_list, the_corresponding_level_of_max_cluster = \
     hierarchical_clustering(dayDeck, linkage_list, read_a_number(1, None, False))
 
-print("Please enter the level of critical distance, you can press Enter to input the default value.")
-print("Default value = 0.7*max(Z[:,2]), and\033[1;35m the corresponding level\033[0m of critical distance of "
-      "the desired number of clusters is " + str(the_corresponding_level_of_max_cluster))
-color_threshold = read_a_number(0, None, True)
+print("Please enter the level of critical distance(DT), you can press Enter to input the default value(0.7*max(Z[:,2])).")
+print("Hint:\033[1;35m The corresponding level\033[0m of critical distance of "
+      "the desired number of clusters is \033[1;35m" + str(the_corresponding_level_of_max_cluster)+"\033[0m")
+color_threshold = read_a_number(0, None, True, input_type='float')
 data_visualization(dayDeck,
                    linkage_list.linkage_list,
                    common_pattern_list,

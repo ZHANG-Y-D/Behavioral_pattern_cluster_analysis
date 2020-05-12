@@ -1,5 +1,4 @@
 import copy
-
 from proximity_matrix import ProximityMatrix
 import data_visualization as dv
 
@@ -109,6 +108,8 @@ def hierarchical_clustering(day_deck, linkage_list, max_cluster):
     if max_cluster == 0:
         max_cluster = 1
 
+    index = 0
+    next_index = -1
     while len(day_deck.dayDeck) > 1:
 
         # Generate thw proximity matrix
@@ -134,9 +135,16 @@ def hierarchical_clustering(day_deck, linkage_list, max_cluster):
             common_pattern_list = copy.deepcopy(day_deck.dayDeck)
             # The corresponding level of critical distance of the desired number of clusters
             the_corresponding_level_of_max_cluster = min_coordinate_and_minvalue[2]
+            next_index = index + 1
+
+        if index == next_index:
+            the_corresponding_level_of_max_cluster = \
+                (the_corresponding_level_of_max_cluster + min_coordinate_and_minvalue[2]) / 2
+
+        index += 1
 
     # print(linkage_list.linkage_list)
-    return common_pattern_list, the_corresponding_level_of_max_cluster + 1
+    return common_pattern_list, the_corresponding_level_of_max_cluster+0.1
 
 
 def data_visualization(day_deck,

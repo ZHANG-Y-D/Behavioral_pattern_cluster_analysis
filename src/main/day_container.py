@@ -1,6 +1,7 @@
 from datetime import time, timedelta, date
 
 
+# noinspection PyUnusedLocal
 class DayContainer:
     date_num: int
     date_curr: date
@@ -21,6 +22,7 @@ class DayContainer:
         self.pir_sensor = [None] * sampling_interval
 
     def init_lumen_list(self, sampling_interval):
+        # noinspection PyUnusedLocal
         self.lumen_sensor = [[None] * sampling_interval for i in range(10)]
 
     def init_temp_list(self, sampling_interval):
@@ -296,7 +298,7 @@ class DayContainer:
         """
          We determine the lumen level according to sunrise and sunset，
          The sunrise and sunset times for Milan in April are from 6:30~20:00
-         Lumen level is from 0 to 5 (whitch is from 'buio' to 'ottima')
+         Lumen level is from 0 to 5 (which is from 'buio' to 'ottima')
          Day is 0 20 40 150 300
          Night is 0 5 20 110 200
         """

@@ -31,4 +31,4 @@ class TestDayDeck(TestCase):
                        [1, 2, 3, 4, 5, 6, 7],
                        [1, 2, 3, 4, 5, 6, 7],
                        [None, 'X', 3, 4, 5, 6, 'X']]
-        self.assertEqual(assert_list,return_value)
+        self.assertEqual(assert_list, return_value)
