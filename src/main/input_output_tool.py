@@ -1,20 +1,20 @@
 import sys
 
 
-def read_a_number(down, up, if_can_be_empty, number_type=None):
+def read_a_number(down=None, up=None, if_can_be_empty=True, number_type='int'):
     while True:
         number = read_a_string("Enter: ")
         if if_can_be_empty is True and number == '':
             return None
         try:
-            if number_type is None or number_type == 'int':
+            if number_type == 'int':
                 number = int(number)
             elif number_type == 'float':
                 number = float(number)
             else:
                 raise TypeError
         except ValueError:
-            print("Please enter a number.")
+            print("Please enter a " + number_type + " number.")
             continue
         if down is not None and number < down:
             print("Please enter a number larger or equal to " + str(down) + ".")

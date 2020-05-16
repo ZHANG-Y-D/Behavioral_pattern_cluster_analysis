@@ -32,7 +32,7 @@ print("1.the PIR sensor \n"
       "3.the temperature sensor \n"
       "4.the power sensor \n"
       "5.all of them")
-kind = read_a_number(1, 5, False)
+kind = read_a_number(down=1, up=5, if_can_be_empty=False)
 if kind == 1:
     build_pir_list(sqlTool, dayDeck.get_list_of_day())
 
@@ -56,14 +56,14 @@ print("Preparing exec hierarchical clustering")
 print("please enter the the desired number of clusters(max cluster) for "
       "presentation the common pattern(\033[1;35m recommended 1 to 5 \033[0m).")
 common_pattern_list, the_corresponding_level_of_max_cluster = \
-    hierarchical_clustering(dayDeck, linkage_list, read_a_number(1, None, False))
+    hierarchical_clustering(dayDeck, linkage_list, read_a_number(down=1, if_can_be_empty=False))
 
 # Presentation
 print(
     "Please enter the level of critical distance(DT), you can press Enter to input the default value(0.7*max(Z[:,2])).")
 print("Hint:\033[1;35m The corresponding level\033[0m of critical distance of "
       "the desired number of clusters is \033[1;35m" + str(the_corresponding_level_of_max_cluster) + "\033[0m")
-color_threshold = read_a_number(0, None, True, number_type='float')
+color_threshold = read_a_number(down=0, number_type='float')
 data_visualization(dayDeck,
                    linkage_list.linkage_list,
                    common_pattern_list,
