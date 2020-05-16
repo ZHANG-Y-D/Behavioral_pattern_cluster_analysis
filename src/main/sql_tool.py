@@ -21,9 +21,20 @@ class SQLTool:
         self.cur = self.conn.cursor()
 
     def query_from_sql(self, query_string):
-        self.cur.execute(query_string)
-        return self.cur.fetchall()
+        try:
+            self.cur.execute(query_string)
+            return self.cur.fetchall()
+        except psycopg2.Error as e:
+            print("\033[1;31m Your dataset may have some problem, "
+                  "Please check the dataset according to the documentation. \033[0m ")
+            print("Problem: " + str(e))
+            print("\033[1;31m Program EXIT. \033[0m ")
+            self.close_connect()
+            sys.exit()
 
     def close_connect(self):
-        self.cur.close()
-        self.conn.close()
+        try:
+            self.cur.close()
+            self.conn.close()
+        except psycopg2.Error:
+            pass
