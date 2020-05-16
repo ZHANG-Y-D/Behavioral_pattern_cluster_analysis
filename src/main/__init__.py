@@ -1,3 +1,4 @@
+from input_output_tool import *
 from linkage_container import LinkageContainer
 from process_controller import *
 from sql_tool import SQLTool
@@ -7,46 +8,24 @@ dayDeck = DayDeck()
 sqlTool = SQLTool()
 linkage_list = LinkageContainer()
 
-
-def read_a_number(down, up, if_can_be_empty, input_type=None):
-    while True:
-        number = input("Enter: ")
-        if if_can_be_empty is True and number == '':
-            return None
-        try:
-            if input_type is None:
-                number = int(number)
-            elif input_type == 'float':
-                number = float(number)
-            else:
-                raise TypeError
-        except ValueError:
-            print("Please enter a number.")
-            continue
-        if number < down:
-            print("Please enter a number larger or equal to " + str(down) + ".")
-            continue
-        elif up is not None and number > up:
-            print("Please enter a number smaller or equal to " + str(up) + ".")
-            continue
-        return number
-
-
+# Connection the database
 print("Welcome to behavioral pattern cluster analysis system!")
 
-dbname = input("Enter the dbname: ")
-user = input("Enter the database user: ")
+dbname = read_a_string("Enter the dbname: ")
+user = read_a_string("Enter the database user: ")
 if dbname == '' or user == '':
     dbname = 'leozhang'
     user = 'postgres'
-password = input("Enter the password(If there is no password, please press enter): ")
-host = input("Enter the host(press enter for the default value)： ")
-port = input("Enter the port(press enter for the default port 5432)： ")
+password = read_a_string("Enter the password(If there is no password, please press enter): ")
+host = read_a_string("Enter the host(press enter for the default value)： ")
+port = read_a_string("Enter the port(press enter for the default port 5432)： ")
 sqlTool.connection_sql(dbname, user, password=password, host=host, port=port)
 print("Connection database succeeded!")
 
+# Find all dates
 build_day_container(sqlTool, dayDeck)
 
+# Build for sensor list
 print("There are 4 kinds of sensor data, which one do you want to analyze?")
 print("1.the PIR sensor \n"
       "2.the lumen sensor \n"
@@ -72,16 +51,19 @@ else:
     build_temp_list(sqlTool, dayDeck.get_list_of_day())
     build_power_list(sqlTool, dayDeck.get_list_of_day())
 
+# Exec hierarchical clustering algorithm
 print("Preparing exec hierarchical clustering")
 print("please enter the the desired number of clusters(max cluster) for "
       "presentation the common pattern(\033[1;35m recommended 1 to 5 \033[0m).")
 common_pattern_list, the_corresponding_level_of_max_cluster = \
     hierarchical_clustering(dayDeck, linkage_list, read_a_number(1, None, False))
 
-print("Please enter the level of critical distance(DT), you can press Enter to input the default value(0.7*max(Z[:,2])).")
+# Presentation
+print(
+    "Please enter the level of critical distance(DT), you can press Enter to input the default value(0.7*max(Z[:,2])).")
 print("Hint:\033[1;35m The corresponding level\033[0m of critical distance of "
-      "the desired number of clusters is \033[1;35m" + str(the_corresponding_level_of_max_cluster)+"\033[0m")
-color_threshold = read_a_number(0, None, True, input_type='float')
+      "the desired number of clusters is \033[1;35m" + str(the_corresponding_level_of_max_cluster) + "\033[0m")
+color_threshold = read_a_number(0, None, True, number_type='float')
 data_visualization(dayDeck,
                    linkage_list.linkage_list,
                    common_pattern_list,
