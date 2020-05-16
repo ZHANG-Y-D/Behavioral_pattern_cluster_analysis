@@ -4,7 +4,7 @@ import data_visualization as dv
 
 
 def build_day_container(sql_tool, day_deck):
-    value = sql_tool.query_from_sql("select date(t_from) as date from person_position group by date order by date;")
+    value = sql_tool.query_from_sql("SELECT date(t_from) as date FROM person_position group by date order by date;")
 
     for i, date in enumerate(value):
         day_deck.add_date(date[0], i)
