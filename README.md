@@ -8,7 +8,7 @@
 <p align="center">
  <img src="https://github.com/ZHANG-Y-D/Behavioral_pattern_cluster_analysis/blob/master/documentation/maredown_pictures/polimi.png" width="35%" height="35%">
 </p>
- 
+
 <br />
 <br />
 <br />
@@ -87,14 +87,11 @@ If the input fields have some problems, the program will exit automatically, ple
 ###### Three tables are necessaries.
 
 
-* person_position: This table stored the PIR sensor’s signals, we will extract dates from
-id_room, t_from, t_to attributes.
+* person_position : This table stored the PIR sensor’s signals, data will be extracted from id_room, t_from, t_to attributes.
 
-* sensor: This table stored configuration information of all sensors, we will extract dates
-from id_room, id_sensor, id_sensor_type, threshold attributes.
+* sensor : This table stored configuration information of all sensors, data will be extracted from id_room, id_sensor, id_sensor_type, threshold attributes.
 
-* stream_data: This table stored the Lumen Temperature and Power sensor’s signals,
-we will extract dates from value, id_sensor, timestamp attributes. 
+* stream_data : This table stored the Lumen Temperature and Power sensor’s signals, data will be extracted from value, id_sensor, timestamp attributes. 
 
 
 
@@ -112,7 +109,7 @@ we will extract dates from value, id_sensor, timestamp attributes.
 
 <br />
 
-###### Be sure appliances’ id in “sensor” table like this
+###### Determine appliances’ id in “sensor” table like this
 
 | ID_SENSOR   |      NAME      |
 |:--------:|:-------------:|
@@ -145,10 +142,10 @@ In case of a failed access to the database, an error message will be showed, and
 ###### Warning
 
 Warning message will not cause the program to exit. There are two cases of warning
- 
+
  * Warning for appliance. In the dataset, there are 9 appliances. If other appliances appear, this warning will raise, you can ignore it if you don’t care the new appliance.
 
- * Warning for signals: if some sensor non has signals in the whole day, this warning will appear
+ * Warning for signals: ·   This warning will raise if some sensors have no signal throughout the day.
 
 
 For example
@@ -162,7 +159,7 @@ For example
 ``Warning: Room 10 No lumen signal received at 2020-04-02``
 
 
-It means that not have lumen signal at room 9 at whole day of 2020-04-01, maybe the sensor has not been installed on this day, so if you sure the dataset is right, you can ignore it.
+This means that in the entire day of 2020-04-01, there is no lumen signal in the ninth room, maybe the lumen sensor was not installed that day. Anyway, if you are sure that the dataset is correct, you can ignore it.     
 
 
 
@@ -179,7 +176,7 @@ This value also called max_cluster, it will decide the number of common patterns
 #### The level of critical distance(DT)
 
 
-This value will decide the final cluster in the dendrogram, the default value is 0.7*max ( max distance of all cluster ). Of course, we recommend using the corresponding value of max_cluater and the CLI will give you a hint.
+This value is the height of the critical distance, it will decide the final cluster in the dendrogram, the default value is 0.7*max (max distance of all cluster). Of course, we recommend using the corresponding value of max_cluater, and when you type, CLI will prompt you what the value is.
 
 
 For example:
@@ -196,21 +193,29 @@ For example:
 
 #### Dendrogram
 
-In the dendrogram, except dendrogram, it also will present max_cluster and the level of critical distance(DT).
-All days below the level of critical distance(DT) will be treated as same cluster,
-And the desired number of clusters ( max cluster ) will present those cluster it passed.
+In the dendrogram image, except the dendrogram, it also will present max_cluster and the level of critical distance(DT).
+
+
+
+All days below the level of critical distance(DT) will be treated as the same cluster, and the desired number of clusters (max cluster) will present those clusters it passed.
+
+
 
 For example:
 
+
+
 ![dendrogram](https://github.com/ZHANG-Y-D/Behavioral_pattern_cluster_analysis/blob/master/documentation/maredown_pictures/dendrogram.png)
 
-As mentioned above, DT decides to dendrogram, and max_cluster decide the number of common pattern or abnormal day, if these two values are in a same interval, the common pattern and abnormal day will perfectly present the content of dendrogram.
+
+
+As mentioned above, DT decides to dendrogram, and max_cluster decide the number of common patterns or abnormal day, if these two values are in the same interval, the common pattern and abnormal day will perfectly present the content of dendrogram.
 
 <br />
 
 #### Calendar
 
-This figure will present which days in the same cluster, the color is same at dendrogram, the abnormal days will color in blue.
+This figure will present which days in the same cluster, their colors are the same as in the dendrogram, the abnormal days will be colored blue. 
 <p align="center">
  <img src="https://github.com/ZHANG-Y-D/Behavioral_pattern_cluster_analysis/blob/master/documentation/maredown_pictures/calendar.png" width="60%" height="60%">
 </p>
