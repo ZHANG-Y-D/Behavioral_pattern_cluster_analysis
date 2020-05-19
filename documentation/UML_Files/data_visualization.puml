@@ -1,0 +1,6 @@
+@startuml
+(*)  --> "Plot dendrogram according to the linkage list"
+--> "Plot calendar according to the dendrogram"
+--> "Plot common patterns and abnormal days"
+-->(*)
+@enduml

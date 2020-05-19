@@ -120,6 +120,7 @@ class TestDayContainer(TestCase):
         self.assertEqual(1, return_value)
         return_value = self.day.determine_power_level(32, 51, 0)
         self.assertEqual(2, return_value)
+        self.day.determine_power_level(30, 51, 0)
 
     def test_add_power_value(self):
         self.day.add_power_value((24, 1, 20, datetime(2020, 4, 2, 0, 10, 0)), self.appliances_sampling_interval)

@@ -1,0 +1,11 @@
+@startuml
+start
+:connect sql;
+:build day_container;
+:build pir/lumen/temp/power list;
+repeat :generate proximity matrix;
+    :hierarchical clustering;
+repeat while (only one day?) is (    No)
+: execute data visualization;
+end
+@enduml

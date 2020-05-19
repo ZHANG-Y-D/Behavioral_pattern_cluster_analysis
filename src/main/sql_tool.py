@@ -10,7 +10,6 @@ class SQLTool:
         pass
 
     def connection_sql(self, dbname, user, password=None, host=None, port=None):
-        # user: postgres
         try:
             self.conn = psycopg2.connect("dbname=" + dbname + " user=" + user + " password=" +
                                          password + " host=" + host + " port=" + port)

@@ -13,9 +13,6 @@ print("Welcome to behavioral pattern cluster analysis system!")
 
 dbname = read_a_string("Enter the dbname: ")
 user = read_a_string("Enter the database user: ")
-if dbname == '' or user == '':
-    dbname = 'leozhang'
-    user = 'postgres'
 password = read_a_string("Enter the password(If there is no password, please press enter): ")
 host = read_a_string("Enter the host(press enter for the default value)： ")
 port = read_a_string("Enter the port(press enter for the default port 5432)： ")

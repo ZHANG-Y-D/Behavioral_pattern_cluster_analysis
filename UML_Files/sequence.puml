@@ -1,5 +1,0 @@
-@startuml
-
-__init__ -> process_controller : do all process jobs
-
-@enduml

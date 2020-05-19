@@ -1,0 +1,8 @@
+@startuml
+start
+repeat :generate proximity matrix;
+    :Cluster tow days whose Manhattan Distance are closest;
+    :Add them to linkage list;
+repeat while (only one day?) is  (    No)
+end
+@enduml

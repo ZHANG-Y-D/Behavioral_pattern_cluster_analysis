@@ -1,0 +1,8 @@
+@startuml
+(*)  --> "Init list with None"
+--> "Extract the value from the database"
+--> "Standardization of formats: Transfers the data extracted from the database to the format we need"
+--> "Add the value to the position corresponding to the list"
+--> "Fill spaces with appropriate values"
+-->(*)
+@enduml

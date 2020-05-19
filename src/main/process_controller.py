@@ -17,8 +17,8 @@ def build_pir_list(sql_tool, list_of_day_deck):
     for day_container in list_of_day_deck:
         day_container.init_pir_list(2880)
         date_curr = day_container.get_date().strftime("%Y-%m-%d")
-        query_result = sql_tool.query_from_sql("select id_room, t_from, t_to from person_position "
-                                               "where date(t_from)='" + date_curr + "' or date(t_to)='"
+        query_result = sql_tool.query_from_sql("SELECT id_room, t_from, t_to FROM person_position "
+                                               "WHERE date(t_from)='" + date_curr + "' or date(t_to)='"
                                                + date_curr + "'order by t_from, t_to, id_room;")
         for tuple_curr in query_result:
             day_container.add_pir_value(tuple_curr)
@@ -118,11 +118,11 @@ def hierarchical_clustering(day_deck, linkage_list, max_cluster):
         # Calculate min value and get min coordinate, form: [x_axis, y_axis, min_value]
         min_coordinate_and_minvalue = ProximityMatrix.find_min_coordinate(proximity_matrix.proximity_matrix)
 
-        # Pop two days from day deck
+        # Pop those two days from day deck
         first_day = day_deck.dayDeck.pop(min_coordinate_and_minvalue[0])
         second_day = day_deck.dayDeck.pop(min_coordinate_and_minvalue[0] + min_coordinate_and_minvalue[1])
 
-        # cluster two days
+        # cluster those two days
         day_deck.clustering(first_day, second_day)
 
         # Add it to linkage list

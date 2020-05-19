@@ -16,3 +16,11 @@ The CLI interactive is very user-friendly, you just have to follow this instruct
 
 ##### Connection dataset
 
+##### Sensor id
+
+| id   |      name      |
+|:--------:|:-------------:|
+| 3 | Light |
+| 4 |   Temperature   |
+| 5 | Energy |
+

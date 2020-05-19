@@ -22,7 +22,6 @@ class DayContainer:
         self.pir_sensor = [None] * sampling_interval
 
     def init_lumen_list(self, sampling_interval):
-        # noinspection PyUnusedLocal
         self.lumen_sensor = [[None] * sampling_interval for i in range(10)]
 
     def init_temp_list(self, sampling_interval):
@@ -368,7 +367,8 @@ class DayContainer:
             else:
                 return 2
         else:
-            print("Warning: Do not have this appliance, Maybe the database has changed")
+            print("Warning: Do not have the appliance NUM." + str(num_of_appliance) +
+                  ", Maybe the database has changed")
 
     @staticmethod
     def normalisation_power_position_in_list(num_of_appliance):
@@ -394,4 +394,5 @@ class DayContainer:
         elif num_of_appliance == 150:
             return 8
         else:
-            print("Warning: Do not have this appliance, Maybe the database has changed")
+            print("Warning: Do not have this appliance NUM." + str(num_of_appliance) +
+                  ",Maybe the database has changed")
