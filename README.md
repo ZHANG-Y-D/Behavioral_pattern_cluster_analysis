@@ -28,6 +28,8 @@ For the second part, if you only care about how to use it and don’t care about
 
 So, here we go.
 
+Note: [Complete documentation click here](https://github.com/ZHANG-Y-D/Behavioral_pattern_cluster_analysis/blob/master/documentation/Behavioral%20pattern%20cluster%20analysis%20system.pdf "Complete Documentation BPCAS")
+
 <br />
 
 
