@@ -1,6 +1,18 @@
 # Behavioral pattern cluster analysis system
 
+<br />
+<br />
+<br />
+<br />
 
+<p align="center">
+ <img src="https://github.com/ZHANG-Y-D/Behavioral_pattern_cluster_analysis/blob/master/documentation/maredown_pictures/polimi.png" width="35%" height="35%">
+</p>
+ 
+<br />
+<br />
+<br />
+<br />
 
 ## Introduction
 
@@ -16,12 +28,14 @@ For the second part, if you only care about how to use it and don’t care about
 
 So, here we go.
 
+<br />
 
 
 ## Usage
 
 The source code is under the path src/main, first of all, build the third-party libraries, and then run “ __init__.py ” file with python 3.6. The src/test is unit test codes.
 
+<br />
 
 
 ### Command-line Interface (CLI)
@@ -34,12 +48,14 @@ The CLI is very user-friendly, you just have to insert the values following the 
 ![CLI2](https://github.com/ZHANG-Y-D/Behavioral_pattern_cluster_analysis/blob/master/documentation/maredown_pictures/interactive2.png)
 
 
-
+<br />
 
 ### Input
 
 
+
 #### Dataset
+
 
 
 ##### Connection dataset
@@ -60,8 +76,10 @@ If the input fields have some problems, the program will exit automatically, ple
 
 
 
+<br />
 
 ##### Check if the dataset is applicable
+
 
 
 ###### Three tables are necessaries.
@@ -78,6 +96,7 @@ we will extract dates from value, id_sensor, timestamp attributes.
 
 
 
+<br />
 
 ###### Determine the id of these three sensors in “sensor_type” table like this
 
@@ -89,6 +108,7 @@ we will extract dates from value, id_sensor, timestamp attributes.
 
 
 
+<br />
 
 ###### Be sure appliances’ id in “sensor” table like this
 
@@ -107,9 +127,9 @@ we will extract dates from value, id_sensor, timestamp attributes.
 
 
 
+<br />
 
 ##### Dataset Error & Warning
-
 
 
 ###### Error
@@ -118,6 +138,7 @@ In case of a failed access to the database, an error message will be showed, and
 ![Error](https://github.com/ZHANG-Y-D/Behavioral_pattern_cluster_analysis/blob/master/documentation/maredown_pictures/data_base_error.png)
 
 
+<br />
 
 ###### Warning
 
@@ -143,6 +164,7 @@ It means that not have lumen signal at room 9 at whole day of 2020-04-01, maybe 
 
 
 
+<br />
 
 #### The desired number of clusters
 
@@ -150,6 +172,7 @@ This value also called max_cluster, it will decide the number of common patterns
 
 
 
+<br />
 
 #### The level of critical distance(DT)
 
@@ -163,10 +186,10 @@ For example:
 
 
 
-
+<br />
+<br />
 
 ### Output
-
 
 
 #### Dendrogram
@@ -181,14 +204,16 @@ For example:
 
 As mentioned above, DT decides to dendrogram, and max_cluster decide the number of common pattern or abnormal day, if these two values are in a same interval, the common pattern and abnormal day will perfectly present the content of dendrogram.
 
-
+<br />
 
 #### Calendar
 
-![Calendar](https://github.com/ZHANG-Y-D/Behavioral_pattern_cluster_analysis/blob/master/documentation/maredown_pictures/calendar.png)
 This figure will present which days in the same cluster, the color is same at dendrogram, the abnormal days will color in blue.
+<p align="center">
+ <img src="https://github.com/ZHANG-Y-D/Behavioral_pattern_cluster_analysis/blob/master/documentation/maredown_pictures/calendar.png" width="60%" height="60%">
+</p>
 
-
+<br />
 
 ####  Common pattern
 
@@ -204,7 +229,7 @@ For power signals, the red color means on, the gray means off. But for “Serra 
 
 ![common_pattern3](https://github.com/ZHANG-Y-D/Behavioral_pattern_cluster_analysis/blob/master/documentation/maredown_pictures/common_pattern3.png)
 
-
+<br />
 
 #### Abnormal day
 
