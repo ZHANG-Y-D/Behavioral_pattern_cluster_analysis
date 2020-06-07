@@ -1,3 +1,15 @@
+"""
+    Version: v2.0
+    Date: 2020/06/07
+    Author: Zhang Yuedong
+    Version update:
+        1.Fixed the color bug
+        2.Built a selector for the sensor in CLI system
+        3.Preview dendrogram
+        4.Built a shortcut for modify appliances sampling interval
+        5.Separate present an appliance in a new figure
+"""
+
 from input_output_tool import *
 from linkage_container import LinkageContainer
 from process_controller import *
@@ -51,7 +63,7 @@ else:
 # Exec hierarchical clustering algorithm
 print("Preparing exec hierarchical clustering")
 print("please enter the the desired number of clusters(max cluster) for "
-      "presentation the common pattern(\033[1;35m recommended 1 to 5 \033[0m).")
+      "presentation the common pattern.")
 common_pattern_list, the_corresponding_level_of_max_cluster = \
     hierarchical_clustering(dayDeck, linkage_list, read_a_number(down=1, if_can_be_empty=False))
 

@@ -17,6 +17,7 @@ class DayContainer:
         self.date_num = num
         self.clustered_date = [date_curr]
         self.appliances_sampling_interval = [30, 120, 300, 1200, 120, 120, 120, 120, 120]
+        # self.appliances_sampling_interval = [30, 30, 30, 30, 30, 30, 30, 30, 30]
 
     def init_pir_list(self, sampling_interval):
         self.pir_sensor = [None] * sampling_interval
