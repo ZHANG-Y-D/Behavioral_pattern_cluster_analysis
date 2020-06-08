@@ -3,7 +3,7 @@ import sys
 
 def read_a_number(down=None, up=None, if_can_be_empty=True, number_type='int'):
     while True:
-        number = read_a_string("Enter: ")
+        number = read_a_string(hint_string="Enter: ")
         if if_can_be_empty is True and number == '':
             return None
         try:
@@ -25,11 +25,20 @@ def read_a_number(down=None, up=None, if_can_be_empty=True, number_type='int'):
         return number
 
 
-def read_a_string(hint_string=None):
+def read_a_string(hint_string=None, must_include=None):
     if hint_string is not None:
         print(hint_string, end='')
+
     try:
-        return input()
+        input_str = str(input())
+        if must_include is None:
+            return input_str
+        else:
+            for ele in input_str:
+                if ele in must_include:
+                    return input_str
+            read_a_string(hint_string='Your input must include: ' + must_include + '\nRe-enter:',
+                          must_include=must_include)
     except KeyboardInterrupt:
         print("\n\nInput interrupted, Program Exit")
         sys.exit()

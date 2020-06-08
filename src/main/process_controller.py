@@ -1,6 +1,44 @@
 import copy
 from proximity_matrix import ProximityMatrix
 import data_visualization as dv
+from input_output_tool import *
+
+
+def connection_database(sql_tool):
+    dbname = read_a_string("Enter the dbname: ")
+    user = read_a_string("Enter the database user: ")
+
+    # For test
+    if dbname == '' or user == '':
+        dbname = 'leozhang'
+        user = 'postgres'
+
+    password = read_a_string("Enter the password(If there is no password, please press enter): ")
+    host = read_a_string("Enter the host(press enter for the default value)： ")
+    port = read_a_string("Enter the port(press enter for the default port 5432)： ")
+    sql_tool.connection_sql(dbname, user, password=password, host=host, port=port)
+    print("Connection database succeeded!")
+
+
+def select_sensor_and_build(sql_tool, list_of_day):
+    print("There are 4 kinds of sensor data, Which sensors do you want to analyze?")
+    print("\033[1;35mHint:\033[0m You can enter the sensor combination, like ac or abcd.")
+    print("a.the PIR sensor \n"
+          "b.the lumen sensor \n"
+          "c.the temperature sensor \n"
+          "d.the power sensor ")
+    kind = read_a_string(hint_string='Enter: ', must_include='abcd')
+    if 'a' in kind:
+        build_pir_list(sql_tool, list_of_day)
+
+    if 'b' in kind:
+        build_lumen_list(sql_tool, list_of_day)
+
+    if 'c' in kind:
+        build_temp_list(sql_tool, list_of_day)
+
+    if 'd' in kind:
+        build_power_list(sql_tool, list_of_day)
 
 
 def build_day_container(sql_tool, day_deck):
@@ -95,7 +133,12 @@ def proximity_matrix_generator(list_of_day_deck, proximity_matrix):
     #     print(ele)
 
 
-def hierarchical_clustering(day_deck, linkage_list, max_cluster):
+def hierarchical_clustering(day_deck, linkage_list):
+    print("Preparing exec hierarchical clustering")
+    print("please enter the the desired number of clusters(max cluster) for "
+          "presentation the common pattern.")
+    max_cluster = read_a_number(down=1, if_can_be_empty=False)
+
     print("Executing hierarchical clustering...")
     proximity_matrix = ProximityMatrix()
     common_pattern_list = []
@@ -144,18 +187,23 @@ def hierarchical_clustering(day_deck, linkage_list, max_cluster):
         index += 1
 
     # print(linkage_list.linkage_list)
-    return common_pattern_list, the_corresponding_level_of_max_cluster+0.1
+    return common_pattern_list, the_corresponding_level_of_max_cluster + 0.1
 
 
 def data_visualization(day_deck,
                        linkage_list,
                        common_pattern_list,
-                       the_corresponding_level_of_max_cluster,
-                       color_threshold=None):
+                       the_corresponding_level_of_max_cluster):
+
+    print("Please enter the level of critical distance(DT), "
+          "you can press Enter to input the default value(0.7*max(Z[:,2])).")
+    print("Hint:\033[1;35m The corresponding level\033[0m of critical distance of "
+          "the desired number of clusters is \033[1;35m" + str(the_corresponding_level_of_max_cluster) + "\033[0m")
+
     color_list = dv.presentation_dendrogram(day_deck,
                                             linkage_list,
                                             the_corresponding_level_of_max_cluster,
-                                            color_threshold=color_threshold)
+                                            color_threshold=read_a_number(down=0, number_type='float'))
     dv.presentation_calendar(common_pattern_list, color_list)
     dv.presentation_common_pattern(common_pattern_list, day_deck.dayDeck[0].appliances_sampling_interval)
     dv.show_all_figure()
