@@ -4,24 +4,17 @@ from scipy.cluster.hierarchy import dendrogram
 
 def presentation_dendrogram(day_deck,
                             linkage,
-                            the_corresponding_level_of_max_cluster,
-                            color_threshold=None):
+                            the_corresponding_level_of_max_cluster):
     print("Executing dendrogram presentation...")
     if day_deck is not None:
         label = day_deck.data_name_labels
     else:
         label = None
     plt.figure()
-    color_list = dendrogram(linkage, labels=label, color_threshold=color_threshold)
+    color_list = dendrogram(linkage, labels=label, color_threshold=the_corresponding_level_of_max_cluster)
     plt.title("Hierarchical Clustering")
-    if color_threshold is None:
-        color_threshold = linkage[-1][2]*0.7
     plt.axhline(y=the_corresponding_level_of_max_cluster,
-                label='The desired number of clusters',
-                color='violet',
-                linestyle='--')
-    plt.axhline(y=color_threshold,
-                label='Level of critical distance: DT',
+                label='Level of critical distance DT = '+str(the_corresponding_level_of_max_cluster),
                 color='tomato',
                 linestyle=':')
     plt.legend()

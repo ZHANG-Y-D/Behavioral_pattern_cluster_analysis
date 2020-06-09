@@ -26,19 +26,20 @@ def read_a_number(down=None, up=None, if_can_be_empty=True, number_type='int'):
 
 
 def read_a_string(hint_string=None, must_include=None):
+
     if hint_string is not None:
         print(hint_string, end='')
 
-    try:
-        input_str = str(input())
-        if must_include is None:
-            return input_str
-        else:
-            for ele in input_str:
-                if ele in must_include:
-                    return input_str
-            read_a_string(hint_string='Your input must include: ' + must_include + '\nRe-enter:',
-                          must_include=must_include)
-    except KeyboardInterrupt:
-        print("\n\nInput interrupted, Program Exit")
-        sys.exit()
+    while True:
+        try:
+            input_str = str(input())
+            if must_include is None:
+                return input_str
+            else:
+                for ele in input_str:
+                    if ele in must_include:
+                        return input_str
+                print('Your input must include: ' + str(must_include) + '\nRe-enter:', end='')
+        except KeyboardInterrupt:
+            print("\n\nInput interrupted, Program Exit")
+            sys.exit()

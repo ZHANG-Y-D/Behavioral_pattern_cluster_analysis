@@ -30,13 +30,10 @@ def select_sensor_and_build(sql_tool, list_of_day):
     kind = read_a_string(hint_string='Enter: ', must_include='abcd')
     if 'a' in kind:
         build_pir_list(sql_tool, list_of_day)
-
     if 'b' in kind:
         build_lumen_list(sql_tool, list_of_day)
-
     if 'c' in kind:
         build_temp_list(sql_tool, list_of_day)
-
     if 'd' in kind:
         build_power_list(sql_tool, list_of_day)
 
@@ -186,8 +183,10 @@ def hierarchical_clustering(day_deck, linkage_list):
 
         index += 1
 
+    print("\033[1;35mThe corresponding level\033[0m of critical distance of "
+          "the desired number of clusters is \033[1;35m" + str(the_corresponding_level_of_max_cluster) + "\033[0m")
     # print(linkage_list.linkage_list)
-    return common_pattern_list, the_corresponding_level_of_max_cluster + 0.1
+    return common_pattern_list, the_corresponding_level_of_max_cluster
 
 
 def data_visualization(day_deck,
@@ -195,15 +194,9 @@ def data_visualization(day_deck,
                        common_pattern_list,
                        the_corresponding_level_of_max_cluster):
 
-    print("Please enter the level of critical distance(DT), "
-          "you can press Enter to input the default value(0.7*max(Z[:,2])).")
-    print("Hint:\033[1;35m The corresponding level\033[0m of critical distance of "
-          "the desired number of clusters is \033[1;35m" + str(the_corresponding_level_of_max_cluster) + "\033[0m")
-
     color_list = dv.presentation_dendrogram(day_deck,
                                             linkage_list,
-                                            the_corresponding_level_of_max_cluster,
-                                            color_threshold=read_a_number(down=0, number_type='float'))
+                                            the_corresponding_level_of_max_cluster)
     dv.presentation_calendar(common_pattern_list, color_list)
     dv.presentation_common_pattern(common_pattern_list, day_deck.dayDeck[0].appliances_sampling_interval)
     dv.show_all_figure()
