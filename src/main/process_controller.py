@@ -20,7 +20,7 @@ def connection_database(sql_tool):
     print("Connection database succeeded!")
 
 
-def select_sensor_and_build(sql_tool, list_of_day):
+def select_sensor_and_build(sql_tool, list_of_day, appliances_sampling_interval):
     print("There are 4 kinds of sensor data, Which sensors do you want to analyze?")
     print("\033[1;35mHint:\033[0m You can enter the sensor combination, like ac or abcd.")
     print("a.the PIR sensor \n"
@@ -35,7 +35,7 @@ def select_sensor_and_build(sql_tool, list_of_day):
     if 'c' in kind:
         build_temp_list(sql_tool, list_of_day)
     if 'd' in kind:
-        build_power_list(sql_tool, list_of_day)
+        build_power_list(sql_tool, list_of_day, appliances_sampling_interval)
 
 
 def build_day_container(sql_tool, day_deck):
@@ -99,10 +99,9 @@ def build_temp_list(sql_tool, list_of_day_deck):
         #     print(ele)
 
 
-def build_power_list(sql_tool, list_of_day_deck):
+def build_power_list(sql_tool, list_of_day_deck, appliances_sampling_interval):
     print("Building power sensor list...")
     for day_container in list_of_day_deck:
-        appliances_sampling_interval = day_container.appliances_sampling_interval
         day_container.init_power_list(appliances_sampling_interval)
         date_curr = day_container.get_date().strftime('%Y-%m-%d')
         query_result = sql_tool.query_from_sql("SELECT se.id_sensor, sd.value, se.threshold, sd.timestamp "
@@ -192,11 +191,12 @@ def hierarchical_clustering(day_deck, linkage_list):
 def data_visualization(day_deck,
                        linkage_list,
                        common_pattern_list,
-                       the_corresponding_level_of_max_cluster):
+                       the_corresponding_level_of_max_cluster,
+                       appliances_sampling_interval):
 
     link_color = dv.presentation_dendrogram(day_deck,
                                             linkage_list,
                                             the_corresponding_level_of_max_cluster)
     dv.presentation_calendar(link_color)
-    dv.presentation_common_pattern(common_pattern_list, day_deck.dayDeck[0].appliances_sampling_interval)
+    dv.presentation_common_pattern(common_pattern_list, appliances_sampling_interval)
     dv.show_all_figure()

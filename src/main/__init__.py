@@ -20,6 +20,8 @@ from day_deck import DayDeck
 dayDeck = DayDeck()
 sqlTool = SQLTool()
 linkage_list = LinkageContainer()
+# appliances_sampling_interval = [30, 120, 300, 1200, 120, 120, 120, 120, 120]
+appliances_sampling_interval = [35, 97, 38, 1231, 1891, 33, 34, 36, 39]
 
 print("Welcome to behavioral pattern cluster analysis system!")
 
@@ -30,7 +32,7 @@ connection_database(sqlTool)
 build_day_container(sqlTool, dayDeck)
 
 # Build for sensor list
-select_sensor_and_build(sqlTool, dayDeck.get_list_of_day())
+select_sensor_and_build(sqlTool, dayDeck.get_list_of_day(), appliances_sampling_interval)
 
 # Exec hierarchical clustering algorithm
 common_pattern_list, the_corresponding_level_of_max_cluster = hierarchical_clustering(dayDeck, linkage_list)
@@ -39,7 +41,8 @@ common_pattern_list, the_corresponding_level_of_max_cluster = hierarchical_clust
 data_visualization(dayDeck,
                    linkage_list.linkage_list,
                    common_pattern_list,
-                   the_corresponding_level_of_max_cluster)
+                   the_corresponding_level_of_max_cluster,
+                   appliances_sampling_interval)
 
 # Close connection
 sqlTool.close_connect()

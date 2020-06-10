@@ -4,7 +4,6 @@ from day_container import DayContainer
 
 
 class TestDayContainer(TestCase):
-
     appliances_sampling_interval = [30, 120, 300, 1200, 120, 120, 120, 120, 120]
 
     def setUp(self):
@@ -16,6 +15,10 @@ class TestDayContainer(TestCase):
         self.day.init_power_list(self.appliances_sampling_interval)
 
     def test_find_index(self):
+        index = self.day.find_index(datetime(2020, 4, 2, 23, 59, 59), 99)
+        self.assertEqual(index, 871)
+        index = self.day.find_index(datetime(2020, 4, 2, 23, 59, 59), 97)
+        self.assertEqual(index, 889)
         index = self.day.find_index(datetime(2020, 4, 2, 0, 0, 30), 30)
         self.assertEqual(index, 1)
         index = self.day.find_index(datetime(2020, 4, 2, 0, 1, 0), 300)
@@ -34,9 +37,17 @@ class TestDayContainer(TestCase):
         self.assertEqual(index, 719)
         index = self.day.find_index(datetime(2020, 4, 2, 23, 55, 0), 300)
         self.assertEqual(index, 287)
+        index = self.day.find_index(datetime(2020, 4, 2, 0, 1, 30), 90)
+        self.assertEqual(index, 1)
+        index = self.day.find_index(datetime(2020, 4, 2, 23, 59, 59), 90)
+        self.assertEqual(index, 959)
+        index = self.day.find_index(datetime(2020, 4, 2, 0, 1, 36), 96)
+        self.assertEqual(index, 1)
+        index = self.day.find_index(datetime(2020, 4, 2, 0, 0, 0), 96)
+        self.assertEqual(index, 0)
 
     def test_add_pir_value(self):
-        self.day.add_pir_value((3, datetime(2020, 4, 2, 10, 0, 10), datetime(2020, 4, 2, 10, 0, 20)))
+        self.day.add_pir_value((3, datetime(2020, 4, 2, 10, 0, 11), datetime(2020, 4, 2, 10, 0, 20)))
         print(self.day.get_pir_list())
         self.day.add_pir_value((3, datetime(2020, 4, 2, 10, 0, 10), datetime(2020, 4, 2, 10, 2, 20)))
         print(self.day.get_pir_list())
@@ -47,6 +58,14 @@ class TestDayContainer(TestCase):
         self.day.add_pir_value((3, datetime(2020, 4, 2, 0, 4, 10), datetime(2020, 4, 2, 0, 4, 10)))
         print(self.day.get_pir_list())
         self.assertEqual(self.day.get_pir_list()[8], '3')
+        self.day.add_pir_value((3, datetime(2020, 4, 2, 0, 0, 1), datetime(2020, 4, 2, 0, 1, 2)))
+        self.assertEqual(self.day.get_pir_list()[0], '3')
+        self.assertEqual(self.day.get_pir_list()[1], '3')
+        self.assertEqual(self.day.get_pir_list()[2], '3')
+        self.day.add_pir_value((None, datetime(2020, 4, 2, 0, 0, 1), datetime(2020, 4, 2, 0, 1, 2)))
+        self.assertEqual(self.day.get_pir_list()[0], '3f')
+        self.assertEqual(self.day.get_pir_list()[1], '3f')
+        self.assertEqual(self.day.get_pir_list()[2], '3f')
 
     def test_fill_black(self):
         self.day.add_pir_value((None, datetime(2020, 4, 2, 0, 4, 10), datetime(2020, 4, 5, 0, 4, 10)))
@@ -63,20 +82,10 @@ class TestDayContainer(TestCase):
         self.assertEqual(self.day.get_pir_list()[9], 'f')
 
     def test_normalisation_time(self):
-        return_value = self.day.normalisation_time(None, datetime(2020, 4, 2, 1, 5, 10), 120)
-        self.assertEqual(return_value, datetime(2020, 4, 2, 1, 4, 00))
-        return_value = self.day.normalisation_time(None, datetime(2020, 4, 2, 1, 23, 10), 300)
-        self.assertEqual(return_value, datetime(2020, 4, 2, 1, 20, 00))
-        return_value = self.day.normalisation_time(None, datetime(2020, 4, 2, 1, 0, 10), 300)
-        self.assertEqual(return_value, datetime(2020, 4, 2, 1, 0, 00))
-        return_value = self.day.normalisation_time(None, datetime(2020, 4, 2, 1, 55, 10), 1200)
-        self.assertEqual(return_value, datetime(2020, 4, 2, 1, 40, 00))
-        return_value = self.day.normalisation_time(None, datetime(2020, 4, 2, 1, 0, 10), 30)
-        self.assertEqual(return_value, datetime(2020, 4, 2, 1, 0, 00))
-        return_value = self.day.normalisation_time(None, datetime(2020, 4, 2, 23, 59, 59), 300)
-        self.assertEqual(return_value, datetime(2020, 4, 2, 23, 55, 00))
-        return_value = self.day.normalisation_time(None, datetime(2020, 4, 2, 23, 59, 59), 1200)
-        self.assertEqual(return_value, datetime(2020, 4, 2, 23, 40, 00))
+        return_value = self.day.normalisation_time(date(2020, 4, 2), datetime(2020, 4, 3, 2, 9, 59))
+        self.assertEqual(return_value, datetime(2020, 4, 2, 23, 59, 59))
+        return_value = self.day.normalisation_time(date(2020, 4, 2), datetime(2020, 4, 1, 23, 59, 59))
+        self.assertEqual(return_value, datetime(2020, 4, 2, 0, 0, 0))
 
     def test_add_lumen_value(self):
         self.day.add_lumen_value((10, '20', datetime(2020, 4, 2, 0, 10, 0)))
@@ -123,12 +132,11 @@ class TestDayContainer(TestCase):
         self.day.determine_power_level(30, 51, 0)
 
     def test_add_power_value(self):
-        self.day.add_power_value((24, 1, 20, datetime(2020, 4, 2, 0, 10, 0)), self.appliances_sampling_interval)
+        self.day.add_power_value((24, 1, 20, datetime(2020, 4, 2, 0, 10, 11)), self.appliances_sampling_interval)
         self.assertEqual(False, self.day.get_power_list()[0][20])
-        self.day.add_power_value((32, 50, 0, datetime(2020, 4, 2, 0, 10, 0)), self.appliances_sampling_interval)
+        self.day.add_power_value((32, 50, 0, datetime(2020, 4, 2, 0, 10, 1)), self.appliances_sampling_interval)
         self.assertEqual(1, self.day.get_power_list()[3][0])
         self.day.add_power_value((45, 5, 0, datetime(2020, 4, 2, 0, 10, 0)), self.appliances_sampling_interval)
         self.assertEqual(5, self.day.get_power_list()[6][5])
         # for ele in self.day.get_power_list():
         #     print(ele)
-

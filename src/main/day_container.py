@@ -1,3 +1,4 @@
+import math
 from datetime import time, timedelta, date
 
 
@@ -9,15 +10,12 @@ class DayContainer:
     lumen_sensor: list  # [10][288] every 5 minute
     temp_sensor: list  # [10][72] every 20 minute
     power_sensor: list
-    appliances_sampling_interval: list
     clustered_date: list
 
     def __init__(self, date_curr, num):
         self.date_curr = date_curr
         self.date_num = num
         self.clustered_date = [date_curr]
-        self.appliances_sampling_interval = [30, 120, 300, 1200, 120, 120, 120, 120, 120]
-        # self.appliances_sampling_interval = [30, 30, 30, 30, 30, 30, 30, 30, 30]
 
     def init_pir_list(self, sampling_interval):
         self.pir_sensor = [None] * sampling_interval
@@ -44,24 +42,8 @@ class DayContainer:
             9.PC: No.150, sampling interval is 120s, threshold: 5w
         """
         self.power_sensor = [None] * 9
-        self.power_sensor[0] = \
-            [None] * int((60 * 60 * 24) / appliances_sampling_interval[0])  # Microonde
-        self.power_sensor[1] = \
-            [None] * int((60 * 60 * 24) / appliances_sampling_interval[1])  # Televisione
-        self.power_sensor[2] = \
-            [None] * int((60 * 60 * 24) / appliances_sampling_interval[2])  # HC2 Power
-        self.power_sensor[3] = \
-            [None] * int((60 * 60 * 24) / appliances_sampling_interval[3])  # Frigorifero
-        self.power_sensor[4] = \
-            [None] * int((60 * 60 * 24) / appliances_sampling_interval[4])  # Forno
-        self.power_sensor[5] = \
-            [None] * int((60 * 60 * 24) / appliances_sampling_interval[5])  # Lavatrici
-        self.power_sensor[6] = \
-            [None] * int((60 * 60 * 24) / appliances_sampling_interval[6])  # Serra A
-        self.power_sensor[7] = \
-            [None] * int((60 * 60 * 24) / appliances_sampling_interval[7])  # Lavastoviglie
-        self.power_sensor[8] = \
-            [None] * int((60 * 60 * 24) / appliances_sampling_interval[8])  # PC
+        for i in range(9):
+            self.power_sensor[i] = [None] * int((60 * 60 * 24) / appliances_sampling_interval[i])
 
     def add_pir_value(self, tuple_curr):
         # print(tuple_curr)
@@ -93,12 +75,11 @@ class DayContainer:
             room = 'a'
         room = str(room)
 
-        t_from = self.normalisation_time(self.date_curr, tuple_curr[1], 30)
-        t_to = self.normalisation_time(self.date_curr, tuple_curr[2], 30)
+        t_from = self.normalisation_time(self.date_curr, tuple_curr[1])
+        t_to = self.normalisation_time(self.date_curr, tuple_curr[2])
 
         while True:
-            if t_from.time() > t_to.time() \
-                    or t_from.date() > self.date_curr:
+            if t_from.time() > t_to.time() or t_from.date() > self.date_curr:
                 break
             index = self.find_index(t_from, 30)
             if self.pir_sensor[index] is None:
@@ -112,23 +93,18 @@ class DayContainer:
 
     def add_lumen_value(self, tuple_curr):
         lumen_level = self.determine_lumen_level(tuple_curr[1], tuple_curr[2])
-        time_curr = self.normalisation_time(None, tuple_curr[2], 300)
-        index = self.find_index(time_curr, 300)
+        index = self.find_index(tuple_curr[2], 300)
         self.lumen_sensor[tuple_curr[0] - 1][index] = lumen_level
 
     def add_temp_value(self, tuple_curr):
         temp_level = self.determine_temp_level(tuple_curr[1])
-        time_curr = self.normalisation_time(None, tuple_curr[2], 1200)
-        index = self.find_index(time_curr, 1200)
+        index = self.find_index(tuple_curr[2], 1200)
         self.temp_sensor[tuple_curr[0] - 1][index] = temp_level
 
     def add_power_value(self, tuple_curr, appliances_sampling_interval):
         power_level = self.determine_power_level(tuple_curr[0], tuple_curr[1], tuple_curr[2])
         power_position = self.normalisation_power_position_in_list(tuple_curr[0])
-        time_curr = self.normalisation_time(None,
-                                            tuple_curr[3],
-                                            appliances_sampling_interval[power_position])
-        index = self.find_index(time_curr, appliances_sampling_interval[power_position])
+        index = self.find_index(tuple_curr[3], appliances_sampling_interval[power_position])
         self.power_sensor[power_position][index] = power_level
 
     def fill_black_for_pir_list(self):
@@ -248,15 +224,13 @@ class DayContainer:
 
     @staticmethod
     def find_index(t_from, sampling_interval):
-        # Sampling_interval unit is second.
-        index = t_from.hour * 3600 / sampling_interval
-        index = int(t_from.minute * 60 / sampling_interval) + index
-        if sampling_interval <= 60 and t_from.second >= 30:
-            index += 1
-        return int(index)
+        index_total = int(60 * 60 * 24 / sampling_interval)
+        seconds_total = t_from.hour * 60 * 60 + t_from.minute * 60 + t_from.second
+        index = (seconds_total / (60 * 60 * 24)) * index_total
+        return math.floor(index)
 
     @staticmethod
-    def normalisation_time(date_curr, time_value, sampling_interval):
+    def normalisation_time(date_curr, time_value):
         """
             Sampling_interval unit is second.
             The sampling interval is
@@ -264,32 +238,20 @@ class DayContainer:
                 lumen 300s
                 temp 1200s
         """
-        if date_curr is None or time_value.date() == date_curr:
-            if sampling_interval >= 60:
-                time_value = time_value.replace(second=0)
-                time_value = time_value.replace(minute=
-                                                time_value.minute -
-                                                time_value.minute %
-                                                int(sampling_interval / 60))
-            else:
-                if time_value.second < 30:
-                    time_value = time_value.replace(second=0)
-                else:
-                    time_value = time_value.replace(second=30)
-        elif time_value.date() < date_curr:
+        if time_value.date() < date_curr:
             time_value = time_value.replace(year=date_curr.year,
                                             month=date_curr.month,
                                             day=date_curr.day,
                                             hour=0,
                                             minute=0,
                                             second=0)
-        else:
+        elif time_value.date() > date_curr:
             time_value = time_value.replace(year=date_curr.year,
                                             month=date_curr.month,
                                             day=date_curr.day,
                                             hour=23,
                                             minute=59,
-                                            second=30)
+                                            second=59)
 
         return time_value
 
