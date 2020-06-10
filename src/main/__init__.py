@@ -20,8 +20,20 @@ from day_deck import DayDeck
 dayDeck = DayDeck()
 sqlTool = SQLTool()
 linkage_list = LinkageContainer()
-# appliances_sampling_interval = [30, 120, 300, 1200, 120, 120, 120, 120, 120]
-appliances_sampling_interval = [35, 97, 38, 1231, 1891, 33, 34, 36, 39]
+"""
+Default values of appliances_sampling_interval.
+Order Microonde: Default 30s
+      Televisione: Default 120s
+      HC2 Power: Default 300s
+      Frigorifero: Default 1200s 
+      Forno: Default 120s
+      Lavatrici: Default 120s 
+      Serra A: Default 120s 
+      Lavastoviglie: Default 120s 
+      PC: Default 120s
+"""
+appliances_sampling_interval = [30, 120, 300, 1200, 120, 120, 120, 120, 120]
+
 
 print("Welcome to behavioral pattern cluster analysis system!")
 

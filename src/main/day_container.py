@@ -231,13 +231,7 @@ class DayContainer:
 
     @staticmethod
     def normalisation_time(date_curr, time_value):
-        """
-            Sampling_interval unit is second.
-            The sampling interval is
-                pir 30s
-                lumen 300s
-                temp 1200s
-        """
+        
         if time_value.date() < date_curr:
             time_value = time_value.replace(year=date_curr.year,
                                             month=date_curr.month,

@@ -12,7 +12,7 @@ class Test(TestCase):
 
     def test_presentation_dendrogram(self):
         linkage_list = [[0.0, 1.0, 2.0, 3.0], [2, 3, 3, 2], [4, 7, 6.2, 3], [5, 8, 13.9, 4], [6, 9, 30, 5]]
-        dv.presentation_dendrogram(None, linkage_list, 14,)
+        dv.presentation_dendrogram(None, linkage_list, 14, )
         dv.show_all_figure()
 
     def test_presentation_calendar(self):
@@ -75,18 +75,21 @@ class Test(TestCase):
     def test_presentation_power_list(self):
         self.ax = plt.figure().subplots(2, 2)
 
-        power_list = [['X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X',
-                       None, None, None, None, None, None, None, None, None, None, None, None, None, None,
+        power_list = [[True, False, True, False, True, False, True, False, True, False, True, False, True, False,
+                       True, False, True, False, True, False, True, False, True, False, True, False, True, False,
+                       True, False, True, False, True, False, True, False, True, False, True, False, True, False,
+                       True, False, True, False, True, False, True, False, True, False,True, False, True, False, False],
+
+                      [True, True, True, True, True, True, True, True, True, True, True, True, True, True,
+                       True, True, True, True, True, True, True, True, True, True, True, True, True, True,
                        True, True, True, True, True, True, True, True, True, True, True, True, True, True,
                        False, False, False, False, False, False, False, False, False, False, False, False],
+
                       ['X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X',
                        None, None, None, None, None, None, None, None, None, None, None, None, None, None,
                        True, True, True, True, True, True, True, True, True, True, True, True, True, True,
                        False, False, False, False, False, False, False, False, False, False, False, False],
-                      ['X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X',
-                       None, None, None, None, None, None, None, None, None, None, None, None, None, None,
-                       True, True, True, True, True, True, True, True, True, True, True, True, True, True,
-                       False, False, False, False, False, False, False, False, False, False, False, False],
+
                       [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 5, 5, 5, 50, 50, 50, 50, 50, 50, 50,
                        'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X',
                        None, None, None, None, None, None, None, None, None, None, None, None, None, None,
@@ -99,18 +102,19 @@ class Test(TestCase):
                        None, None, None, None, None, None, None, None, None, None, None, None, None, None,
                        True, True, True, True, True, True, True, True, True, True, True, True, True, True,
                        False, False, False, False, False, False, False, False, False, False, False, False],
+
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2,
                        1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 5, 5, 5, 50, 50, 50, 50, 50, 50, 50,
                        52, 52, 52, 52, 52, 52, 52, 52, 52, 52, 52, 52, 52, 52, 52, 52, 52, 52, 52, 52, 52,
-                       'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X',
-                       None, None, None, None, None, None, None, None, None, None, None, None, None, None,
-                       52, 52, 52, 52, 52, 52, 52, 52, 52, 52, 52, 52, 52, 52, 52, 52, 52, 52, 52, 52, 52],
+                       'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X'],
+
                       ['X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X',
                        None, None, None, None, None, None, None, None, None, None, None, None, None, None,
                        True, True, True, True, True, True, True, True, True, True, True, True, True, True,
                        False, False, False, False, False, False, False, False, False, False, False, False],
                       []
                       ]
-        appliances_sampling_interval = [30, 120, 300, 1200, 120, 120, 120, 120, 120]
+        # appliances_sampling_interval = [30, 120, 300, 1200, 120, 120, 120, 120, 120]
+        appliances_sampling_interval = [1200, 1006, 1006, 1006, 1006, 1006, 1006, 1006, 1006]
         dv.presentation_power_list(self.ax[1, 1], power_list, appliances_sampling_interval)
         dv.show_all_figure()

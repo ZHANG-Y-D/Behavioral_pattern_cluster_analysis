@@ -200,8 +200,8 @@ def presentation_power_list(ax, power_list, appliances_sampling_interval):
     """
     ax.set_title('The power sensor signals')
     ax.set_ylim(0, 10)
-    ax.set_xlim(0, 2880)
-    ax.set_xticks([0, 720, 1440, 2160, 2879])
+    ax.set_xlim(0, 68400)
+    ax.set_xticks([0, 17100, 34200, 51300, 68399])
     ax.set_xticklabels(['00:00', '6:00', '12:00', '18:00', '23:59'])
     ax.set_yticks([1, 2, 3, 4, 5, 6, 7, 8, 9])
     ax.set_yticklabels(['Microonde', 'Televisione', 'HC2 Power', 'Frigorifero', 'Forno',
@@ -245,8 +245,11 @@ def presentation_power_list(ax, power_list, appliances_sampling_interval):
             else:
                 color = 'white'
 
-            time_index = time_index * (appliances_sampling_interval[power_num] / 30)
-            ax.broken_barh([(time_index, appliances_sampling_interval[power_num] / 30)], (power_num + 0.6, 0.8),
+            index_total_float = 60 * 60 * 24 / appliances_sampling_interval[power_num]
+            index_total_int = int(index_total_float)
+            bias = index_total_float / index_total_int
+            time_index = time_index * appliances_sampling_interval[power_num] * bias
+            ax.broken_barh([(time_index, (60 * 60 * 24) / index_total_int)], (power_num + 0.6, 0.8),
                            facecolors=color)
 
 
