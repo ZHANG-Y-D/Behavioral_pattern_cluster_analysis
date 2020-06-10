@@ -245,7 +245,10 @@ For power signals, the red color means on, the gray means off. But for “Serra 
 
 ## Version update
 ### V 2.0
-1.Fixed the color bug.
-2.Built a selector for the sensor in CLI system.
-3.Combine input values 'max_cluster' and 'the_corresponding_level_of_max_cluster', Now only need to enter the max_cluster value.
-4.Built a shortcut for modify appliances sampling interval.
+1. Fixed the color bug.
+
+2. Built a selector for the sensor in CLI system.
+
+3. Combine input values 'max_cluster' and 'the_corresponding_level_of_max_cluster', Now only need to enter the max_cluster value.
+
+4. Built a shortcut for modify appliances sampling interval.
