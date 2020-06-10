@@ -241,3 +241,11 @@ For power signals, the red color means on, the gray means off. But for “Serra 
 #### Abnormal day
 
 ![abnormal_day](https://github.com/ZHANG-Y-D/Behavioral_pattern_cluster_analysis/blob/master/documentation/maredown_pictures/abnormal_day.png)
+
+
+## Version update
+### V 2.0
+1.Fixed the color bug.
+2.Built a selector for the sensor in CLI system.
+3.Combine input values 'max_cluster' and 'the_corresponding_level_of_max_cluster', Now only need to enter the max_cluster value.
+4.Built a shortcut for modify appliances sampling interval.

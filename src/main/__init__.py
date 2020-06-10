@@ -5,13 +5,16 @@
     Version update:
         1.Fixed the color bug.
         2.Built a selector for the sensor in CLI system.
-        3.Preview dendrogram
-        4.Combine input values 'max_cluster' and 'the_corresponding_level_of_max_cluster',
+        3.Combine input values 'max_cluster' and 'the_corresponding_level_of_max_cluster',
           Now only need to enter the max_cluster value.
-        5.Built a shortcut for modify appliances sampling interval
-        6.Separate present an appliance in a new figure
+        4.Built a shortcut for modify appliances sampling interval.
+"""
 """
 
+3.Preview dendrogram
+6.Separate present an appliance in a new figure
+
+"""
 from linkage_container import LinkageContainer
 from process_controller import *
 from sql_tool import SQLTool
