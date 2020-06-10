@@ -194,9 +194,9 @@ def data_visualization(day_deck,
                        common_pattern_list,
                        the_corresponding_level_of_max_cluster):
 
-    color_list = dv.presentation_dendrogram(day_deck,
+    link_color = dv.presentation_dendrogram(day_deck,
                                             linkage_list,
                                             the_corresponding_level_of_max_cluster)
-    dv.presentation_calendar(common_pattern_list, color_list)
+    dv.presentation_calendar(link_color)
     dv.presentation_common_pattern(common_pattern_list, day_deck.dayDeck[0].appliances_sampling_interval)
     dv.show_all_figure()

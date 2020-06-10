@@ -1,5 +1,6 @@
+from datetime import datetime
 import matplotlib.pyplot as plt
-from scipy.cluster.hierarchy import dendrogram
+from scipy.cluster.hierarchy import dendrogram, fcluster
 
 
 def presentation_dendrogram(day_deck,
@@ -11,14 +12,18 @@ def presentation_dendrogram(day_deck,
     else:
         label = None
     plt.figure()
-    color_list = dendrogram(linkage, labels=label, color_threshold=the_corresponding_level_of_max_cluster)
+    link_color = dendrogram(linkage,
+                            labels=label,
+                            color_threshold=the_corresponding_level_of_max_cluster)
+
     plt.title("Hierarchical Clustering")
     plt.axhline(y=the_corresponding_level_of_max_cluster,
-                label='Level of critical distance DT = '+str(the_corresponding_level_of_max_cluster),
+                label='Level of critical distance DT = ' + str(the_corresponding_level_of_max_cluster),
                 color='tomato',
                 linestyle=':')
     plt.legend()
-    return color_list['color_list']
+
+    return link_color
 
 
 def set_parameter_for_axis(ax, year):
@@ -38,21 +43,33 @@ def set_parameter_for_axis(ax, year):
                         'October', 'November', 'December'])
 
 
-def presentation_calendar(common_pattern_list, color_list):
+def presentation_calendar(link_color):
     print("Executing calendar presentation...")
     year_list = []
+    color_list = []
+    date_list = []
 
     # Build the color list
-    color_list = sorted(set(color_list), key=color_list.index)
-    if 'b' in color_list:
-        color_list.remove('b')
+    link_coord = list(zip(link_color['icoord'],
+                          link_color['dcoord'],
+                          link_color['color_list']))
+
+    for ele in link_coord:
+        if ele[1][0] == 0.0:
+            color_list.append([ele[0][0], ele[2]])
+        if ele[1][3] == 0.0:
+            color_list.append([ele[0][3], ele[2]])
+
+    color_list.sort()
 
     # Find out how many years there are
-    for ele in common_pattern_list:
-        for date in ele.clustered_date:
-            if date.year not in year_list:
-                year_list.append(date.year)
+    for ele in link_color['ivl']:
+        date = datetime.strptime(ele, '%Y-%m-%d')
+        date_list.append(date)
+        if date.year not in year_list:
+            year_list.append(date.year)
     ax = plt.figure().subplots(len(year_list))
+    year_list.sort()
 
     # Set coefficient for each year
     if len(year_list) == 1:
@@ -62,19 +79,16 @@ def presentation_calendar(common_pattern_list, color_list):
             set_parameter_for_axis(ax[year_list.index(year)], year)
 
     # Color for date on the corresponding year
-    for ele in common_pattern_list:
-        # Determinate color for this day
-        if len(ele.clustered_date) == 1:
-            color = 'b'
-            color_list.insert(common_pattern_list.index(ele), color)
+    for i, ele in enumerate(color_list):
+        date_curr = date_list[i]
+        color_curr = ele[1]
+        if len(year_list) > 1:
+            for _ in year_list:
+                ax[year_list.index(date_curr.year)].broken_barh([(date_curr.day - 0.4, 0.8)],
+                                                                (date_curr.month - 0.4, 0.8),
+                                                                facecolors=color_curr)
         else:
-            color = color_list[common_pattern_list.index(ele)]
-        for date in ele.clustered_date:
-            if len(year_list) > 1:
-                ax[year_list.index(date.year)].broken_barh([(date.day - 0.4, 0.8)],
-                                                           (date.month - 0.4, 0.8), facecolors=color)
-            else:
-                ax.broken_barh([(date.day - 0.4, 0.8)], (date.month - 0.4, 0.8), facecolors=color)
+            ax.broken_barh([(date_curr.day - 0.4, 0.8)], (date_curr.month - 0.4, 0.8), facecolors=color_curr)
 
 
 def presentation_common_pattern(common_pattern_list, appliances_sampling_interval):

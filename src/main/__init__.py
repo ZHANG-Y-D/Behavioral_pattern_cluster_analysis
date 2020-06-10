@@ -3,7 +3,7 @@
     Date: 2020/06/07
     Author: Zhang Yuedong
     Version update:
-        1.Fixed the color bug
+        1.Fixed the color bug.
         2.Built a selector for the sensor in CLI system.
         3.Preview dendrogram
         4.Combine input values 'max_cluster' and 'the_corresponding_level_of_max_cluster',

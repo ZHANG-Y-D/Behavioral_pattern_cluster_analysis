@@ -12,34 +12,29 @@ class Test(TestCase):
 
     def test_presentation_dendrogram(self):
         linkage_list = [[0.0, 1.0, 2.0, 3.0], [2, 3, 3, 2], [4, 7, 6.2, 3], [5, 8, 13.9, 4], [6, 9, 30, 5]]
-        dv.presentation_dendrogram(None, linkage_list, 14, color_threshold=13)
+        dv.presentation_dendrogram(None, linkage_list, 14,)
         dv.show_all_figure()
 
     def test_presentation_calendar(self):
-        day_deck = DayDeck()
-        day_container0 = DayContainer(date(2020, 10, 8), 0)
-        day_container1 = DayContainer(date(2020, 10, 8), 0)
-        day_container2 = DayContainer(date(2020, 11, 8), 1)
-        day_container3 = DayContainer(date(2020, 11, 9), 2)
-        day_container4 = DayContainer(date(2020, 11, 9), 2)
-
-        day_container0.clustered_date = [date(2019, 8, 1)]
-        # day_container1.clustered_date = [date(2019, 1, 1), date(2019, 1, 2), date(2019, 1, 3)]
-        # day_container2.clustered_date = [date(2019, 2, 1), date(2019, 2, 2), date(2019, 2, 3)]
-        day_container1.clustered_date = [date(2020, 1, 1), date(2020, 1, 2), date(2020, 1, 3)]
-        day_container2.clustered_date = [date(2020, 7, 1)]
-        day_container3.clustered_date = [date(2019, 2, 1), date(2019, 2, 2), date(2019, 2, 3)]
-        day_container4.clustered_date = [date(2021, 7, 1)]
-
-        day_deck.dayDeck.append(day_container0)
-        day_deck.dayDeck.append(day_container1)
-        day_deck.dayDeck.append(day_container2)
-        day_deck.dayDeck.append(day_container3)
-        day_deck.dayDeck.append(day_container4)
-
-        common_pattern_list = day_deck.dayDeck
-        color_list = ['b', 'r', 'r', 'b', 'b', 'g', 'b']
-        dv.presentation_calendar(common_pattern_list, color_list)
+        link_color = {'icoord': [[15.0, 15.0, 25.0, 25.0],
+                                 [5.0, 5.0, 20.0, 20.0],
+                                 [45.0, 45.0, 55.0, 55.0],
+                                 [65.0, 65.0, 75.0, 75.0],
+                                 [50.0, 50.0, 70.0, 70.0],
+                                 [35.0, 35.0, 60.0, 60.0],
+                                 [12.5, 12.5, 47.5, 47.5]],
+                      'dcoord': [[0.0, 1853.0, 1853.0, 0.0],
+                                 [0.0, 2526.0, 2526.0, 1853.0],
+                                 [0.0, 1428.0, 1428.0, 0.0],
+                                 [0.0, 1606.0, 1606.0, 0.0],
+                                 [1428.0, 2280.0, 2280.0, 1606.0],
+                                 [0.0, 2700.0, 2700.0, 2280.0],
+                                 [2526.0, 2867.0, 2867.0, 2700.0]],
+                      'ivl': ['2021-04-08', '2019-04-06', '2022-04-07', '2020-04-01',
+                              '2022-04-03', '2020-04-04', '2020-04-02', '2020-04-05'],
+                      'leaves': [7, 5, 6, 0, 2, 3, 1, 4],
+                      'color_list': ['g', 'b', 'r', 'c', 'b', 'b', 'b']}
+        dv.presentation_calendar(link_color)
         dv.show_all_figure()
 
     def test_presentation_pir_list(self):
